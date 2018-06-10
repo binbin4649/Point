@@ -39,6 +39,8 @@ Configure::write('payjp.public', 'pk_test_000000000000000000000000');
 
 ## PointUserモデルの説明
 
+ポイント、クレジット、使用可能ポイントはいずれもマイナスになる場合はfalseを返す。
+
 ### ポイント加算（ポイント購入） PointUser->pointAdd($data)
 point 増加
 available_point 増加

@@ -1,31 +1,31 @@
 <!-- form -->
-<?php echo $this->BcForm->create('PointUser') ?>
+<?php echo $this->BcForm->create('PointUser', ['url'=>'edit/'.$this->request->data['PointUser']['id']]) ?>
 <div class="section">
 	<table cellpadding="0" cellspacing="0" class="form-table">
 		<tr>
 			<th class="col-head"><?php echo $this->BcForm->label('Mypage.id', '会員番号') ?></th>
 			<td class="col-input">
-				<?php echo $pointUser['Mypage']['id']; ?>
-				<?php echo $this->BcForm->input('PointUser.mypage_id', array('type' => 'hidden', 'value' => $pointUser['Mypage']['id'])) ?>
-				<?php echo $this->BcForm->input('PointUser.point_user_id', array('type' => 'hidden', 'value' => $pointUser['PointUser']['id'])) ?>
+				<?php echo $this->request->data['Mypage']['id']; ?>
+				<?php echo $this->BcForm->input('PointUser.mypage_id', array('type' => 'hidden')) ?>
+				<?php echo $this->BcForm->input('PointUser.point_user_id', array('type' => 'hidden')) ?>
 			</td>
 		</tr>
 		<tr>
 			<th class="col-head" width="150"><?php echo $this->BcForm->label('Mypage.name', '名前') ?></th>
 			<td class="col-input">
-				<?php echo $pointUser['Mypage']['name']; ?>
+				<?php echo $this->request->data['Mypage']['name']; ?>
 			</td>
 		</tr>
 		<tr>
 			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.point', '現ポイント') ?></th>
 			<td class="col-input">
-				<?php echo $pointUser['PointUser']['point']; ?>
+				<?php echo $this->request->data['PointUser']['point']; ?>
 			</td>
 		</tr>
 		<tr>
 			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.credit', '現クレジット') ?></th>
 			<td class="col-input">
-				<?php echo $pointUser['PointUser']['credit']; ?>
+				<?php echo $this->request->data['PointUser']['credit']; ?>
 			</td>
 		</tr>
 		<tr>
@@ -67,7 +67,7 @@
 			<th>reason</th>
 			<th>reason_id</th>
 		</tr>
-		<?php foreach($pointUser['PointBook'] as $book): ?>
+		<?php foreach($this->request->data['PointBook'] as $book): ?>
 		<tr>
 			<td><?php echo $book['created']; ?></td>
 			<td><?php echo $book['point']; ?></td>

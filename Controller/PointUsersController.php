@@ -19,11 +19,11 @@ class PointUsersController extends PointAppController {
 
   public function beforeFilter() {
     parent::beforeFilter();
-    //$this->BcAuth->allow('');
+    $this->BcAuth->allow('komoju_webhook');
     if(preg_match('/^admin_/', $this->action)){
 	   $this->subMenuElements = array('point');
     }
-    $this->Security->unlockedActions = array('payment');
+    $this->Security->unlockedActions = array('payment', 'komoju', 'komoju_webhook');
   }
 
   //ポイントユーザー一覧。ユーザーを検索してポイント調整できる
@@ -47,18 +47,18 @@ class PointUsersController extends PointAppController {
   // ポイント調整
   public function admin_edit($id){
 	  $this->pageTitle = 'ポイント調整';
-	  $pointUser = $this->PointUser->findById($id);
-	  if ($this->request->is('post')){
-	  	$data = $this->request->data['PointUser'];
-	  	$pointBook = $this->PointUser->pointAdd($data);
-		if($pointBook){
-			$this->setMessage( '調整しました');
-			$this->redirect(array('action' => 'edit'));
-		}else{
-			$this->setMessage('エラー', true);
-		}
+	  if(empty($this->request->data)){
+		  $pointUser = $this->PointUser->findById($id);
+	  }else{
+		  $pointUser = $this->request->data;
+		  if($this->PointUser->pointAdd($pointUser['PointUser'])){
+			  $this->setMessage( '調整しました');
+			  $this->redirect(array('action' => 'edit/'.$id));
+		  }else{
+			  $this->setMessage('エラー', true);
+		  }
 	  }
-	  $this->set('pointUser', $pointUser);
+	  $this->request->data = $pointUser;
   }
   
   // フロント画面用のデフォルトアクション
@@ -148,6 +148,66 @@ class PointUsersController extends PointAppController {
 	  $this->pageTitle = 'Thanks';
 	  $pointBook = $this->PointBook->findById($pointbook_id);
 	  $this->set('book', $pointBook);
+  }
+  
+  public function komoju(){
+	  $amountList = Configure::read('PointPlugin.AmountList');
+	  $amount = 1500;
+	  if($this->request->data){
+		  $URL = "https://sandbox.komoju.jp/api/v1/payments";
+		  $USERNAME = "sk_ff98c491524cc7fdc76fab77e0fd7321bde2b089";
+		  $PASSWORD = "";
+		  $POST_DATA = array(
+			    'amount' => '1000',
+			    'tax' => '0',
+			    'currency' => 'JPY',
+			    'external_order_num' => '2',
+			    'metadata[foobar]' => 'hoge',
+			    "payment_details" => $this->request->data['token'],
+		  );
+		  $ch = curl_init();
+		  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($POST_DATA));
+		  curl_setopt($ch, CURLOPT_USERPWD, $USERNAME . ":" . $PASSWORD);
+		  curl_setopt($ch, CURLOPT_URL, $URL);
+		  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		  curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		  $buf = curl_exec($ch);
+		  curl_close($ch);
+		  var_dump($buf);
+	  }
+	  $this->set('amount', $amount);
+	  $this->set('point', $amountList[$amount]);
+  }
+  
+  //https://qiita.com/TakahiroSakoda/items/65c3bd5aef8149e020dd
+  //https://dev.dubmilli.com/point/point_users/komoju_webhook
+  public function komoju_webhook(){
+	$token = "rtyuikmnbvghio9876trfghj";
+	$this->autoRender = false;
+	$request_signature = '';
+	foreach ($_SERVER as $name => $value) {
+		if($name == "HTTP_X_KOMOJU_ID"){
+			$request_id = $value;
+		}
+		if($name == "HTTP_X_KOMOJU_SIGNATURE"){
+			$request_signature = $value;
+		}
+		if($name == "HTTP_X_KOMOJU_EVENT"){
+			$request_event = $value;
+		}
+	}
+	// bodyの中に、処理に必要なjsonが入ってる
+	$body = file_get_contents('php://input');
+	$signature = hash_hmac("sha256",$body,$token);
+	if($signature === $request_signature){
+		echo 'hello world.';
+		$this->log('komoju id : '.$request_id);
+		$this->log('komoju event : '.$request_event);
+	}else{
+		echo 'bad';
+		$this->log('bad request!');
+	}
+
   }
 
 

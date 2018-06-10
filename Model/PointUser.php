@@ -56,6 +56,8 @@ class PointUser extends AppModel {
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
 		$new_point = $PointUser['PointUser']['point'] + $data['point'];
 		$new_available_point = $PointUser['PointUser']['available_point'] + $data['point'];
+		if($new_point < 0) return false; //ポイントはマイナスにならない。
+		if($new_available_point < 0) return false;//使用可能ポイントはマイナスにならない
 		
 		$datasource = $this->getDataSource();
 		try{
@@ -169,6 +171,7 @@ class PointUser extends AppModel {
 		$new_available_point = $PointUser['PointUser']['available_point'] - $data['point'];
 		if($new_credit > $PointUser['PointUser']['point']) return false; //クレジットはポイントを超えてはならない。
 		if($new_available_point < 0) return false; //使用可能ポイントはマイナスにならない。
+		if($new_credit < 0) return false; //クレジットはマイナスにならない。
 		
 		$datasource = $this->getDataSource();
 		try{
