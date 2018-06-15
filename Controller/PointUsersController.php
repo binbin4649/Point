@@ -129,7 +129,7 @@ class PointUsersController extends PointAppController {
 			$pointBook['PointBook']['last4'] = $charge->card->last4;//カードの下4桁
 			$pointBook['PointBook']['siteUrl'] = $siteUrl;
 			$pointBook['PointBook']['loginUrl'] = $siteUrl.'members/mypages/login';
-			$this->sendMail($user['email'], 'ご購入ありがとうございます', $pointBook, array('template'=>'Point.thanks'));
+			$this->sendMail($user['email'], 'ご購入ありがとうございます', $pointBook, array('template'=>'Point.thanks', 'layout'=>'default'));
 			$this->setMessage('ご購入ありがとうございます。');
 			$this->redirect(array('controller'=>'point_users', 'action' => 'thanks/'.$pointBook['PointBook']['id']));
 		}else{
