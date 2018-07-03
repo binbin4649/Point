@@ -1,4 +1,4 @@
 <?php
-$this->Plugin->initDb('plugin', 'Point');
+$this->Plugin->initDb('Point');
 
 ?>
