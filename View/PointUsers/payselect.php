@@ -13,7 +13,7 @@
 		<tbody>
 		<?php foreach($amountList as $amount => $point): ?>
 		<tr>
-			<td class="align-middle text-right size320"><?php echo number_format($amount); ?>円（<?php echo number_format($point); ?>ポイント）</td>
+			<td class="align-middle text-right narrow-size"><?php echo number_format($amount); ?>円（<?php echo number_format($point); ?>ポイント）</td>
 			<td><?php echo $this->BcBaser->link( number_format($amount).'円', '/point/point_users/payment/'.$amount, ['class'=>'btn btn-outline-primary btn-e', 'role'=>'button']) ?></td>
 		</tr>
 		<?php endforeach; ?>
