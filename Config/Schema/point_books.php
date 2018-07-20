@@ -19,6 +19,7 @@ class PointBooksSchema extends CakeSchema {
 		'point_balance' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'credit_balance' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'pay_token' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 200, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+		'pay_plan' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'charge' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'reason' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 200, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'reason_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 200, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),

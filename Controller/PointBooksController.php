@@ -42,8 +42,13 @@ class PointBooksController extends PointAppController {
   		'recursive' => -1
     );
     $PointBooks = $this->paginate('PointBook');
+    $reasonList = Configure::read('PointPlugin.ReasonList');
+    foreach($PointBooks as $key=>$book){
+	    if(!empty($reasonList[$book['PointBook']['reason']])){
+			$PointBooks[$key]['PointBook']['reason'] = $reasonList[$book['PointBook']['reason']];
+	    }
+    }
     $this->set('PointBooks', $PointBooks);
-    $this->set('reasonList', Configure::read('PointPlugin.ReasonList'));
     
   }
 

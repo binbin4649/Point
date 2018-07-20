@@ -22,7 +22,7 @@
 		<?php foreach($PointBooks as $book): ?>
 			<tr>
 			<td scope="row"><?php echo $book['PointBook']['created']; ?></td>
-			<td><?php echo $reasonList[$book['PointBook']['reason']]; ?></td>
+			<td><?php echo $book['PointBook']['reason']; ?></td>
 			<td class="text-right"><?php echo number_format($book['PointBook']['point']); ?></td>
 			<td class="text-right"><?php echo number_format($book['PointBook']['credit']); ?></td>
 			<td class="text-right"><?php echo number_format($book['PointBook']['point_balance']); ?></td>

@@ -1,5 +1,4 @@
 <?php 
-require_once(dirname(__FILE__)."/../vendor/autoload.php");
 
 class PointUsersController extends PointAppController {
   
@@ -23,7 +22,7 @@ class PointUsersController extends PointAppController {
     if(preg_match('/^admin_/', $this->action)){
 	   $this->subMenuElements = array('point');
     }
-    $this->Security->unlockedActions = array('payment', 'komoju', 'komoju_webhook');
+    $this->Security->unlockedActions = array('payment', 'auto_charge', 'komoju', 'komoju_webhook');
   }
 
   //ポイントユーザー一覧。ユーザーを検索してポイント調整できる
@@ -77,7 +76,6 @@ class PointUsersController extends PointAppController {
   public function payment($amount){
 	  $user = $this->BcAuth->user();
 	  $amountList = Configure::read('PointPlugin.AmountList');
-	  $siteUrl = Configure::read('BcEnv.siteUrl');
       if(!$user){
 		$this->setMessage('エラー: user error.', true);
 		$this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
@@ -95,50 +93,16 @@ class PointUsersController extends PointAppController {
 		  $this->setMessage('カード情報が入力されていません。', true);
 		  $this->redirect(array('controller'=>'point_users', 'action' => 'payment/'.$amount));
 		}
-		$secret_key = Configure::read('payjp.secret');
-		\Payjp\Payjp::setApiKey($secret_key);
-		try {
-		$charge = \Payjp\Charge::create([
-			  'card' => $payjp_token,
-			  'amount'=> $amount,
-			  'currency' => 'jpy'
-			]);
-		}catch (\Payjp\Error\InvalidRequest $e){
-			$message = $e->error->message;
-			$this->log($message);
-			$this->setMessage($message, true);
-			$this->redirect(array('action' => 'payselect/'.$amount));
-		}
-		// $charge->paid 与信が通った場合にtrue。都度決済で支払いと与信を同時に行うのでここではスルー。
-		// $charge->captured 与信だけの場合はfalseが帰ってくる。ポイントは毎回決済するのでここではスルー。
-		// $charge->id;//一意の決済key
-		//念のため決済金額を確認。もし違っていたらログに残す。
-		if($amount != $charge->amount){
-			$this->log('Warning : PointUserController.php payment. Different amounts. payjp_id:'.$charge->id);
-		}
-		$point_add = [
-			'mypage_id' => $user['id'],
-			'point' => $amountList[$amount],
-			'reason' => 'payjp',
-			'pay_token' => $charge->id,
-			'charge' => $amount
-		];
-		$pointBook = $this->PointUser->pointAdd($point_add);
+		$pointBook = $this->PointUser->payjpOnceCharge($payjp_token, $amount, $user['id']);
 		if($pointBook){
-			$pointBook['PointBook']['brand'] = $charge->card->brand;//カードのブランド
-			$pointBook['PointBook']['last4'] = $charge->card->last4;//カードの下4桁
-			$pointBook['PointBook']['siteUrl'] = $siteUrl;
-			$pointBook['PointBook']['loginUrl'] = $siteUrl.'members/mypages/login';
 			$this->sendMail($user['email'], 'ご購入ありがとうございます', $pointBook, array('template'=>'Point.thanks', 'layout'=>'default'));
 			$this->setMessage('ご購入ありがとうございます。');
 			$this->redirect(array('controller'=>'point_users', 'action' => 'thanks/'.$pointBook['PointBook']['id']));
 		}else{
-			$this->log('Warning : PointUserController.php payment. save error. payjp_id:'.$charge->id);
-			$this->setMessage('決済エラー：お手数ですがお問合せよりご連絡ください。', true);
+			$this->setMessage('決済エラー：時間を空けて再度お試しいただくか、お問合せよりご連絡ください。', true);
 			$this->redirect(array('action' => 'payselect/'.$amount));
 		}
 	  }
-	  $amountList = Configure::read('PointPlugin.AmountList');
 	  $this->set('amount', $amount);
 	  $this->set('point', $amountList[$amount]);
 	  $this->set('payjp_public', Configure::read('payjp.public'));
@@ -149,6 +113,94 @@ class PointUsersController extends PointAppController {
 	  $pointBook = $this->PointBook->findById($pointbook_id);
 	  $this->set('book', $pointBook);
   }
+  
+  //オートチャージの開始、設定変更、解除
+  public function auto_charge(){
+	  $user = $this->BcAuth->user();
+	  $this->pageTitle = 'オートチャージ(自動決済)';
+	  $PointUser = $this->PointUser->findByMypageId($user['id']);
+	  if($PointUser['PointUser']['pay_plan'] == 'auto' && !empty($PointUser['PointUser']['payjp_card_token'])){
+		  $isAutoCharge = true;
+	  }else{
+		  $isAutoCharge = false;
+	  }
+	  if($this->request->data){
+		  $charge = $this->request->data['PointUser']['charge'];
+		  $payjp_token = $this->request->data['payjp-token'];
+		  if($isAutoCharge){
+			  if(empty($charge) && empty($payjp_token)){
+				  $this->setMessage('変更はありません。', true);
+				  $this->redirect(array('controller'=>'point_users', 'action' => 'auto_charge'));
+			  }
+			  if($this->PointUser->payjpEditAutoCharge($payjp_token, $charge, $user['id'])){
+				  $this->setMessage('オートチャージの設定を変更しました。');
+				  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+			  }else{
+				  $this->setMessage('エラー：時間を空けて再度お試しいただくか、お問合せからご連絡ください。', true);
+				  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+			  }
+		  }else{
+			  if(empty($charge)){
+				  $this->setMessage('金額が選択されていません。', true);
+				  $this->redirect(array('controller'=>'point_users', 'action' => 'auto_charge'));
+			  }
+			  if(empty($payjp_token)){
+				  $this->setMessage('カード情報が入力されていません。', true);
+				  $this->redirect(array('controller'=>'point_users', 'action' => 'auto_charge'));
+			  }
+			  if($this->PointUser->payjpNewAutoCharge($payjp_token, $charge, $user['id'])){
+				  $this->setMessage('オートチャージを設定しました。');
+				  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+			  }else{
+				  $this->setMessage('エラー：時間を空けて再度お試しいただくか、お問合せからご連絡ください。', true);
+				  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+			  }
+		  }
+	  }
+	  $chargeList = [];
+	  $amountList = Configure::read('PointPlugin.AmountList');
+	  foreach($amountList as $amount=>$point){
+		  $chargeList[$amount] = number_format($amount).'円('.$point.'ポイント)';
+	  }
+	  $this->set('chargeList', $chargeList);
+	  $this->set('BreakPoint', Configure::read('PointPlugin.BreakPoint'));
+	  $this->set('payjp_public', Configure::read('payjp.public'));
+	  $this->set('PointUser', $PointUser);
+	  $this->set('isAutoCharge', $isAutoCharge);
+  }
+  
+  //オートチャージ解除
+  public function cancell_auto_charge(){
+	  $user = $this->BcAuth->user();
+	  $this->pageTitle = 'オートチャージ解除';
+	  $PointUser = $this->PointUser->findByMypageId($user['id']);
+	  if($PointUser['PointUser']['pay_plan'] == 'auto' && !empty($PointUser['PointUser']['payjp_card_token'])){
+		  $isAutoCharge = true;
+	  }else{
+		  $isAutoCharge = false;
+	  }
+	  if(!$isAutoCharge){
+		  $this->setMessage('オートチャージは登録されていません。', true);
+		  $this->redirect(array('controller'=>'point_users', 'action' => 'auto_charge'));
+	  }
+	  if($this->request->data){
+		  if($this->request->data['PointUser']['cancell'] == '1'){
+			  if($this->PointUser->payjpCancellAutoCharge($user['id'])){
+				  $this->setMessage('オートチャージを解除しました。');
+				  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+			  }else{
+				  $this->setMessage('エラー：解除失敗。お手数ですが、お問合せからご連絡ください。', true);
+				  $this->redirect(array('controller'=>'point_users', 'action' => 'cancell_auto_charge'));
+			  }
+		  }else{
+			  $this->setMessage('チェックを入れてボタンを押してください。', true);
+			  $this->redirect(array('controller'=>'point_users', 'action' => 'cancell_auto_charge'));
+		  }
+	  }
+	  
+	  $this->set('PointUser', $PointUser);
+  }
+  
   
   public function komoju(){
 	  $amountList = Configure::read('PointPlugin.AmountList');
