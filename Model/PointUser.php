@@ -178,9 +178,12 @@ class PointUser extends AppModel {
 		if(empty($data['point'])) return false;
 		if(empty($data['reason'])) return false;
 		if(empty($data['reason_id'])) $data['reason_id'] = '';
-		// pay_plan = basic のみで有効。bais以外はtrueを返してスルー。
+		// pay_plan = basic のみで有効。basic以外はtrueを返してスルー。念の為pay_planが無かったら通常扱い。
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
-		if($PointUser['PointUser']['pay_plan'] != 'basic') return true;
+		if(!empty($PointUser['PointUser']['pay_plan'])){
+			if($PointUser['PointUser']['pay_plan'] != 'basic') return true;
+		}
+		
 		
 		//ポイント計算
 		$new_credit = $PointUser['PointUser']['credit'] + $data['point'];
