@@ -35,6 +35,7 @@ class PointUser extends AppModel {
 				'point' => 0,
 				'credit' => 0,
 				'available_point' => 0,
+				'pay_plan' => 'basic'
 			]];
 			if($this->save($PointUser)){
 				return $this->getLastInsertId();
@@ -116,18 +117,18 @@ class PointUser extends AppModel {
 		
 		//ポイント計算、pay_planで処理方法を変える
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
-		if($PointUser['PointUser']['pay_plan'] == 'basic'){
-			$point = $credit = $data['point'];
-			$new_point = $PointUser['PointUser']['point'] + $point;
-			$new_credit = $PointUser['PointUser']['credit'] + $credit;
-			if($new_point < 0) return false; //ポイント、クレジットはマイナスにならない。
-			if($new_credit < 0) return false;
-		}elseif($PointUser['PointUser']['pay_plan'] == 'auto'){
+		if($PointUser['PointUser']['pay_plan'] == 'auto'){
 			$point = $data['point'];
 			$credit = 0;
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = 0;
 			if($new_point < 0) return false; //ポイントはマイナスにならない。
+		}else{
+			$point = $credit = $data['point'];
+			$new_point = $PointUser['PointUser']['point'] + $point;
+			$new_credit = $PointUser['PointUser']['credit'] + $credit;
+			if($new_point < 0) return false; //ポイント、クレジットはマイナスにならない。
+			if($new_credit < 0) return false;
 		}
 		
 		$datasource = $this->getDataSource();
