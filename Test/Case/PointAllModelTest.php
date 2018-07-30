@@ -1,6 +1,6 @@
 <?php
 
-class MembersAllModelTest extends CakeTestSuite {
+class PointAllModelTest extends CakeTestSuite {
 
 	public static function suite() {
 		$suite = new CakeTestSuite('All model tests');

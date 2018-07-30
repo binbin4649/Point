@@ -185,7 +185,6 @@ class PointUser extends AppModel {
 			if($PointUser['PointUser']['pay_plan'] != 'basic') return true;
 		}
 		
-		
 		//ポイント計算
 		$new_credit = $PointUser['PointUser']['credit'] + $data['point'];
 		$new_available_point = $PointUser['PointUser']['available_point'] - $data['point'];
