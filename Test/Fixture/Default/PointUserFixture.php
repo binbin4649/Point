@@ -1,7 +1,10 @@
 <?php
 
-class PointUserFixture extends BaserTestFixture {
-
+class PointUserFixture extends CakeTestFixture {
+	
+	public $import = array('model' => 'Point.PointUser');
+	
+/*
 	public $fields = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'mypage_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
@@ -22,6 +25,7 @@ class PointUserFixture extends BaserTestFixture {
 		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
 	);
+*/
 	
 	public $records = array(
 		array(
