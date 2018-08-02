@@ -2,6 +2,7 @@
 
 class PointUserFixture extends CakeTestFixture {
 	
+	public $useDbConfig = 'test';
 	public $import = array('model' => 'Point.PointUser');
 	
 /*

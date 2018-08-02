@@ -8,8 +8,13 @@ class PointUserTest extends BaserTestCase {
     );
 
     public function setUp() {
-        parent::setUp();
         $this->PointUser = ClassRegistry::init('Point.PointUser');
+        parent::setUp();
+    }
+    
+    public function tearDown(){
+	    unset($this->PointUser);
+	    parent::tearDown();
     }
 
     public function testGetPointUserId(){
