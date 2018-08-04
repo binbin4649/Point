@@ -5,6 +5,7 @@ class PointUserTest extends BaserTestCase {
     public $fixtures = array(
         'plugin.point.Default/PointUser',
         'plugin.point.Default/PointBook',
+        'plugin.members.Default/Mypage'
     );
 
     public function setUp() {
@@ -75,7 +76,7 @@ class PointUserTest extends BaserTestCase {
 	    $data = ['mypage_id'=>3, 'point'=>'-50', 'reason'=>'test'];
 	    $r = $this->PointUser->pointExp($data);
 	    $this->assertEquals(0, $r['PointBook']['credit']);
-	    $this->assertEquals(50, $r['PointBook']['point_balance']);
+	    $this->assertEquals(9950, $r['PointBook']['point_balance']);
 	    $this->assertEquals('test', $r['PointBook']['reason']);
     }
     

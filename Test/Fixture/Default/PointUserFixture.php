@@ -52,9 +52,9 @@ class PointUserFixture extends CakeTestFixture {
 		array(
 			'id' => 3,
 			'mypage_id' => 3,
-			'point' => 100,
+			'point' => 10000,
 			'credit' => 0,
-			'available_point' => 100,
+			'available_point' => 10000,
 			'pay_plan' => 'auto',
 			'created' => '2018-07-30 16:26:01',
 			'modified' => '2018-07-30 16:26:01',

@@ -166,6 +166,9 @@ class PointUser extends AppModel {
 			$this->log('PointUser.php PointExp save error. : '.$e);
 			return false;
 		}
+		if($PointUser['PointUser']['pay_plan'] == 'auto'){
+			$this->payjpRunAutoCharge($data['mypage_id']);
+		}
 		return $PointBook;
 	}
 	
@@ -392,6 +395,7 @@ class PointUser extends AppModel {
 				$pointUser['PointUser']['auto_charge_status'] = 'fail';
 				$this->create();
 				$this->save($pointUser);
+				$pointUser['PointBook']['BreakPoint'] = $BreakPoint;
 				$this->sendEmail($pointUser['Mypage']['email'], 'ポイントチャージに失敗しました。', $pointUser, array('template'=>'Point.auto_charge_fail', 'layout'=>'default'));
 				return false;
 			}
