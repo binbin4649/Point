@@ -24,7 +24,7 @@
 		<div class="col-md-4 text-md-right">
 			カード情報入力
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-8 text-md-left text-center">
 			<script
 			  type="text/javascript"
 			  src="https://checkout.pay.jp/"
@@ -38,7 +38,7 @@
 		</div>
 	</div>
 	<?php if($isAutoCharge): ?>
-		<div class="row py-3 rounded border">
+		<div class="row py-3 mx-2 rounded border">
 			<div class="col-md-4 text-md-right">
 				登録済み
 				<?php if($PointUser['PointUser']['auto_charge_status'] == 'success'): ?>
