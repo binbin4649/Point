@@ -326,6 +326,8 @@ class PointUser extends AppModel {
 	public function payjpEditAutoCharge($payjp_token, $charge, $mypage_id){
 		$this->Mylog = new Mylog;
 		$pointUser = $this->findByMypageId($mypage_id, null, null, -1);
+		//2重クリック防止 8秒以内の更新は無効
+		if((time() - strtotime($pointUser['PointUser']['modified'])) < 8) return false;
 		if(!empty($charge)){
 			$pointUser['PointUser']['charge_point'] = $charge;
 		}
