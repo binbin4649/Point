@@ -31,6 +31,6 @@ $config['PointPlugin.AmountList'] = [
 ];
 
 //何ポイント以下になったらオートチャージされるのかのブレイクポイント
-$config['PointPlugin.BreakPoint'] = 500;
+//$config['PointPlugin.BreakPoint'] = 500;
 
 ?>
