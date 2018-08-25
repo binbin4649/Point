@@ -2,6 +2,7 @@
 App::uses('PointUser', 'Point.Model');
 
 class PointUserTest extends BaserTestCase {
+	
     public $fixtures = array(
         'plugin.point.Default/PointUser',
         'plugin.point.Default/PointBook',
