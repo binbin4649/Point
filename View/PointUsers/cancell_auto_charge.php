@@ -12,13 +12,13 @@
 	<?php echo $this->BcForm->create('PointUser', array('url' => 'cancell_auto_charge')) ?>
 
 	<div class="row mb-3">
-		<div class="col-md-4 text-md-right">
+		<div class="col-3">
 		</div>
-		<div class="col-md-4 form-check form-check-inline">
+		<div class="col-6 form-check form-check-inline">
 			<?php echo $this->BcForm->input('cancell', array('type'=>'checkbox', 'class' => 'form-check-input mr-3')) ?>
 			<label class="form-check-label">解除します。</label>
 		</div>
-		<div class="col-md-4"></div>
+		<div class="col-3"></div>
 	</div>
 	
 	<div class="text-center mt-sm-5 mt-4">
