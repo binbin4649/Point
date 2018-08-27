@@ -4,6 +4,8 @@ $config['BcApp.adminNavi.point'] = array(
   'name' => 'ポイント管理プラグイン',
   'contents' => array(
     array('name' => 'ポイント管理', 'url' => array('admin' => true, 'plugin' => 'point', 'controller' => 'point_users', 'action' => 'index')),
+    array('name' => 'クーポン一覧', 'url' => array('admin' => true, 'plugin' => 'point', 'controller' => 'point_coupons', 'action' => 'index')),
+    array('name' => 'クーポン生成', 'url' => array('admin' => true, 'plugin' => 'point', 'controller' => 'point_coupons', 'action' => 'add')),
   )
 );
 
@@ -29,6 +31,6 @@ $config['PointPlugin.AmountList'] = [
 ];
 
 //何ポイント以下になったらオートチャージされるのかのブレイクポイント
-$config['PointPlugin.BreakPoint'] = 500;
+//$config['PointPlugin.BreakPoint'] = 500;
 
 ?>

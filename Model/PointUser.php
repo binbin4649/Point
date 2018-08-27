@@ -137,7 +137,7 @@ class PointUser extends AppModel {
 			$this->create();
 			$saveField = ['point', 'credit'];
 			$save_point_user = ['PointUser' => [
-				'id' => $data['point_user_id'],
+				'id' => $PointUser['PointUser']['id'],
 				'point' => $new_point,
 				'credit' => $new_credit,
 			]];
@@ -146,8 +146,8 @@ class PointUser extends AppModel {
 			}
 			$this->PointBook->create();
 			$PointBook = ['PointBook' => [
-				'mypage_id' => $data['mypage_id'],
-				'point_user_id' => $data['point_user_id'],
+				'mypage_id' => $PointUser['PointUser']['mypage_id'],
+				'point_user_id' => $PointUser['PointUser']['id'],
 				'point' => $point,
 				'credit' => $credit,
 				'point_balance' => $new_point,
@@ -201,7 +201,7 @@ class PointUser extends AppModel {
 			$this->create();
 			$saveField = ['credit', 'available_point'];
 			$save_point_user = ['PointUser' => [
-				'id' => $data['point_user_id'],
+				'id' => $PointUser['PointUser']['id'],
 				'credit' => $new_credit,
 				'available_point' => $new_available_point,
 			]];
@@ -210,8 +210,8 @@ class PointUser extends AppModel {
 			}
 			$this->PointBook->create();
 			$PointBook = ['PointBook' => [
-				'mypage_id' => $data['mypage_id'],
-				'point_user_id' => $data['point_user_id'],
+				'mypage_id' => $PointUser['PointUser']['mypage_id'],
+				'point_user_id' => $PointUser['PointUser']['id'],
 				'point' => 0,
 				'credit' => $data['point'],
 				'point_balance' => $PointUser['PointUser']['point'],
