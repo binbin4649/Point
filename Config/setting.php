@@ -23,12 +23,7 @@ $config['PointPlugin.ReasonList'] = [
 ];
 
 // 決済金額の種類。リスト。 決済金額 => 発行されるポイント
-$config['PointPlugin.AmountList'] = [
-	'1500' => '1500',
-	'3000' => '3000',
-	'6000' => '6100',
-	'9000' => '9300',
-];
+//$config['PointPlugin.AmountList'] = ['1500' => '1500','3000' => '3000','6000' => '6100','9000' => '9300'];
 
 //何ポイント以下になったらオートチャージされるのかのブレイクポイント
 //$config['PointPlugin.BreakPoint'] = 500;
