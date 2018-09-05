@@ -123,6 +123,11 @@ class PointUser extends AppModel {
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = 0;
 			if($new_point < 0) return false; //ポイントはマイナスにならない。
+		}elseif($PointUser['PointUser']['pay_plan'] == 'pay_off'){
+			$point = $data['point'];
+			$credit = 0;
+			$new_point = $PointUser['PointUser']['point'] + $point;
+			$new_credit = 0;
 		}else{
 			$point = $credit = $data['point'];
 			$new_point = $PointUser['PointUser']['point'] + $point;

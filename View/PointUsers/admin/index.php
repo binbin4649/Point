@@ -9,7 +9,7 @@
 <table cellpadding="0" cellspacing="0" class="list-table" id="ListTable">
 <thead>
 	<tr>
-		<th class="list-tool">ポイント調整</th>
+		<th class="list-tool">調整・編集</th>
 		<th><?php echo $this->Paginator->sort('Mypage.id', array('asc' => $this->BcBaser->getImg('admin/blt_list_down.png', array('alt' => '昇順', 'title' => '昇順')) . ' 会員番号', 'desc' => $this->BcBaser->getImg('admin/blt_list_up.png', array('alt' => '降順', 'title' => '降順')) . ' 会員番号'), array('escape' => false, 'class' => 'btn-direction')) ?></th>
 		<th><?php echo $this->Paginator->sort('Mypage.name', array('asc' => $this->BcBaser->getImg('admin/blt_list_down.png', array('alt' => '昇順', 'title' => '昇順')) . ' 名前', 'desc' => $this->BcBaser->getImg('admin/blt_list_up.png', array('alt' => '降順', 'title' => '降順')) . ' 名前'), array('escape' => false, 'class' => 'btn-direction')) ?></th>
 		<th><?php echo $this->Paginator->sort('PointUser.point', array('asc' => $this->BcBaser->getImg('admin/blt_list_down.png', array('alt' => '昇順', 'title' => '昇順')) . ' Point', 'desc' => $this->BcBaser->getImg('admin/blt_list_up.png', array('alt' => '降順', 'title' => '降順')) . ' Mail'), array('escape' => false, 'class' => 'btn-direction')) ?></th>

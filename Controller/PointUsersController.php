@@ -4,7 +4,7 @@ class PointUsersController extends PointAppController {
   
   public $name = 'PointUsers';
 
-  public $uses = array('Plugin', 'Point.PointUser', 'Point.PointBook', 'Members.Mypage');
+  public $uses = array('Plugin', 'Point.PointUser', 'Point.PointBook', 'Members.Mypage', 'Members.Mylog');
   
   public $helpers = array('BcPage', 'BcHtml', 'BcTime', 'BcForm');
   
@@ -44,7 +44,7 @@ class PointUsersController extends PointAppController {
   }
   
   // ポイント調整
-  public function admin_edit($id){
+  public function admin_adjust($id){
 	  $this->pageTitle = 'ポイント調整';
 	  if(empty($this->request->data)){
 		  $pointUser = $this->PointUser->findById($id);
@@ -58,6 +58,27 @@ class PointUsersController extends PointAppController {
 		  }
 	  }
 	  $this->request->data = $pointUser;
+  }
+  
+  //ユーザー編集
+  public function admin_edit($id = null){
+	  $this->pageTitle = 'PointUser 編集';
+	  $user = $this->BcAuth->user();
+	  if(empty($this->request->data)){
+		  $PointUser = $this->PointUser->findById($id);
+	  }else{
+		  if($this->PointUser->save($this->request->data)){
+	        $this->Mylog->record($id, 'point_user_edit', $user['id']);
+	        $this->setMessage( '編集しました');
+	        $this->redirect(array('action' => 'index'));
+	      }else{
+		    $PointUser = $this->PointUser->findById($id);
+	        $this->setMessage('エラー', true);
+	      }
+	  }
+	  $this->set('PayPlan', Configure::read('PointPlugin.PayPlanList'));
+	  $this->set('InvoicePlan', Configure::read('PointPlugin.InvoicePlanList'));  
+	  $this->request->data = $PointUser;
   }
   
   // フロント画面用のデフォルトアクション

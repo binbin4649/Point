@@ -7,78 +7,59 @@
 			<td class="col-input">
 				<?php echo $this->request->data['Mypage']['id']; ?>
 				<?php echo $this->BcForm->input('PointUser.mypage_id', array('type' => 'hidden')) ?>
-				<?php echo $this->BcForm->input('PointUser.point_user_id', array('type' => 'hidden')) ?>
+				<?php echo $this->BcForm->input('PointUser.id', array('type' => 'hidden')) ?>
 			</td>
 		</tr>
 		<tr>
-			<th class="col-head" width="150"><?php echo $this->BcForm->label('Mypage.name', '名前') ?></th>
+			<th class="col-head" width="150">名前</th>
 			<td class="col-input">
 				<?php echo $this->request->data['Mypage']['name']; ?>
 			</td>
 		</tr>
 		<tr>
-			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.point', '現ポイント') ?></th>
+			<th class="col-head" width="150">現ポイント</th>
 			<td class="col-input">
-				<?php echo $this->request->data['PointUser']['point']; ?>
+				point:<?php echo $this->request->data['PointUser']['point']; ?><br>
+				credit:<?php echo $this->request->data['PointUser']['credit']; ?>
 			</td>
 		</tr>
 		<tr>
-			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.credit', '現クレジット') ?></th>
+			<th class="col-head" width="150">PAY.jp</th>
 			<td class="col-input">
-				<?php echo $this->request->data['PointUser']['credit']; ?>
+				auto_charge_status:<?php echo $this->request->data['PointUser']['auto_charge_status']; ?><br>
+				charge_point:<?php echo $this->request->data['PointUser']['charge_point']; ?><br>
+				card_token:<?php echo $this->request->data['PointUser']['payjp_card_token']; ?><br>
+				customer_token:<?php echo $this->request->data['PointUser']['payjp_customer_token']; ?><br>
+				brand:<?php echo $this->request->data['PointUser']['payjp_brand']; ?><br>
+				last4:<?php echo $this->request->data['PointUser']['payjp_last4']; ?>
 			</td>
 		</tr>
 		<tr>
-			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.point', '増減ポイント') ?></th>
+			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.pay_plan', '支払プラン') ?></th>
 			<td class="col-input">
-			<?php echo $this->BcForm->input('PointUser.point', array('type'=>'text', 'value' => 0)) ?>
-			<?php echo $this->BcForm->error('PointUser.point') ?></td>
+				<?php echo $this->BcForm->input('PointUser.pay_plan', array('type'=>'select', 'options'=>$PayPlan, 'empty'=>'---')) ?>
+				<?php echo $this->BcForm->error('PointUser.pay_plan') ?></td>
+			</td>
 		</tr>
 		<tr>
-			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.reason', '理由') ?></th>
+			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.pay_plan', '請求プラン') ?></th>
 			<td class="col-input">
-			<?php echo $this->BcForm->input('PointUser.reason', array('type'=>'text', 'value'=>'other')) ?>
-			<?php echo $this->BcForm->error('PointUser.reason') ?></td>
+				<?php echo $this->BcForm->input('PointUser.invoice_plan', array('type'=>'select', 'options'=>$InvoicePlan, 'empty'=>'---')) ?>
+				<?php echo $this->BcForm->error('PointUser.invoice_plan') ?></td>
+			</td>
 		</tr>
 	</table>
 </div>
 <!-- button -->
 <div class="submit">
-<?php echo $this->BcForm->submit('調整', array('div' => false, 'class' => 'button')) ?>
+<?php echo $this->BcForm->submit('編集', array('div' => false, 'class' => 'button')) ?>
 </div>
 <?php echo $this->BcForm->end() ?>
 
 <div class="section">
 <ul>
-	<li>減する時は半角ハイフンを付ける。</li>
+	<li>[2018-09-02] この画面は請求書払に設定するために作った。[basic -> pay_off] を想定。[basic <-> auto]へ任意に変えてどうなるかはテストしてない。</li>
 	<li></li>
 	<li></li>
 </ul>
 </div>
-<div class="section">
-	<table cellpadding="0" cellspacing="0" class="form-table">
-		<tr>
-			<th>created</th>
-			<th>point</th>
-			<th>credit</th>
-			<th>point_balance</th>
-			<th>credit_balance</th>
-			<th>charge</th>
-			<th>reason</th>
-			<th>reason_id</th>
-		</tr>
-		<?php foreach($this->request->data['PointBook'] as $book): ?>
-		<tr>
-			<td><?php echo $book['created']; ?></td>
-			<td><?php echo $book['point']; ?></td>
-			<td><?php echo $book['credit']; ?></td>
-			<td><?php echo $book['point_balance']; ?></td>
-			<td><?php echo $book['credit_balance']; ?></td>
-			<td><?php echo $book['charge']; ?></td>
-			<td><?php echo $book['reason']; ?></td>
-			<td><?php echo $book['reason_id']; ?></td>
-		</tr>
-		<?php endforeach; ?>
-	</table>
-</div>
-

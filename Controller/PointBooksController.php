@@ -18,14 +18,45 @@ class PointBooksController extends PointAppController {
 
   public function beforeFilter() {
     parent::beforeFilter();
-  
+	if(preg_match('/^admin_/', $this->action)){
+	   $this->subMenuElements = array('point');
+    }
     //$this->BcAuth->allow('');
   }
 
   //管理画面用のデフォルトアクション
   public function admin_index() {
-    
+    $this->pageTitle = 'PointBook';
+    $conditions = [];
+    if ($this->request->is('post')){
+      $data = $this->request->data;
+      if($data['PointBook']['mypage_id']) $conditions[] = array('PointBook.mypage_id' => $data['PointBook']['mypage_id']);
+      if($data['PointBook']['reason']) $conditions[] = array('PointBook.reason' => $data['PointBook']['reason']);
+    }
+    $this->paginate = array('conditions' => $conditions,
+      'order' => 'PointBook.id DESC',
+      'limit' => 50
+    );
+    $PointBooks = $this->paginate('PointBook');
+    $this->set('PointBooks', $PointBooks);
   }
+  
+  public function admin_edit($id = null){
+	  $this->pageTitle = 'PointBook 編集';
+	  if(empty($this->request->data)){
+		  $PointBook = $this->PointBook->findById($id);
+	  }else{
+		  if($this->PointBook->save($this->request->data)){
+	        $this->setMessage( '編集しました');
+	        $this->redirect(array('action' => 'index'));
+	      }else{
+		    $PointBook = $this->PointBook->findById($id);
+	        $this->setMessage('エラー', true);
+	      }
+	  }
+	  $this->request->data = $PointBook;
+  }
+  
   
   // ポイント・クレジット履歴
   public function index() {
@@ -38,7 +69,7 @@ class PointBooksController extends PointAppController {
   	$this->paginate = array(
   		'conditions' => array('PointBook.mypage_id'=>$user['id']),
   		'order' => 'PointBook.id DESC',
-  		'limit' => 10,
+  		'limit' => 20,
   		'recursive' => -1
     );
     $PointBooks = $this->paginate('PointBook');

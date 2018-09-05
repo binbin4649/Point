@@ -26,6 +26,7 @@ class PointBooksSchema extends CakeSchema {
 		'close_date' => array('type' => 'date', 'null' => true, 'default' => null),
 		'deadline_date' => array('type' => 'date', 'null' => true, 'default' => null),
 		'invoice_amount' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'invoice_detail' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 		'invoice_date' => array('type' => 'date', 'null' => true, 'default' => null),
 		'payment_date' => array('type' => 'date', 'null' => true, 'default' => null),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),

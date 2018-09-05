@@ -3,7 +3,10 @@
   <td>
     <ul class="cleafix">
       <li>
-        <?php $this->bcBaser->link('ポイント管理', array('controller' => 'point_users', 'action' => 'index')) ?>
+        <?php $this->bcBaser->link('ユーザー管理', array('controller' => 'point_users', 'action' => 'index')) ?>
+      </li>
+      <li>
+        <?php $this->bcBaser->link('PointBook', array('controller' => 'point_books', 'action' => 'index')) ?>
       </li>
       <li>
         <?php $this->bcBaser->link('クーポン一覧', array('controller' => 'point_coupons', 'action' => 'index')) ?>
