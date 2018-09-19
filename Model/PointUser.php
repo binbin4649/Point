@@ -378,7 +378,6 @@ class PointUser extends AppModel {
 		$BreakPoint = Configure::read('PointPlugin.BreakPoint');
 		$siteUrl = Configure::read('BcEnv.siteUrl');
 		$amountList = Configure::read('PointPlugin.AmountList');
-		
 		if(!empty($pointUser['PointUser']['payjp_card_token']) && 
 				$pointUser['PointUser']['pay_plan'] == 'auto' &&
 				$pointUser['PointUser']['point'] <= $BreakPoint &&
@@ -399,11 +398,17 @@ class PointUser extends AppModel {
 			}catch (Exception $e){
 				$error_body = $e->getJsonBody();
 				$this->log('Pointuser.php payjpRunAutoCharge : '.$error_body['error']['message']);
-				$pointUser['PointUser']['auto_charge_status'] = 'fail';
-				$this->create();
-				$this->save($pointUser);
-				$pointUser['PointBook']['BreakPoint'] = $BreakPoint;
-				$this->sendEmail($pointUser['Mypage']['email'], 'ポイントチャージに失敗しました。', $pointUser, array('template'=>'Point.auto_charge_fail', 'layout'=>'default'));
+				if($error_body['error']['type'] == 'server_error'){
+					$this->sendEmail(Configure::read('BcSite.email'), 'オートチャージ server_error', $pointUser, array('template'=>'Point.auto_charge_fail', 'layout'=>'default'));
+				}elseif($error_body['error']['type'] == 'client_error'){
+					$this->sendEmail(Configure::read('BcSite.email'), 'オートチャージ client_error', $pointUser, array('template'=>'Point.auto_charge_fail', 'layout'=>'default'));
+				}else{
+					$pointUser['PointUser']['auto_charge_status'] = 'fail';
+					$this->create();
+					$this->save($pointUser);
+					$pointUser['PointBook']['BreakPoint'] = $BreakPoint;
+					$this->sendEmail($pointUser['Mypage']['email'], 'ポイントチャージに失敗しました。', $pointUser, array('template'=>'Point.auto_charge_fail', 'layout'=>'default'));
+				}
 				return false;
 			}
 			$point_add = [
