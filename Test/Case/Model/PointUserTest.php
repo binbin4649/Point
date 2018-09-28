@@ -113,5 +113,15 @@ class PointUserTest extends BaserTestCase {
 	    $this->assertEquals(50, $r['PointBook']['credit_balance']);
 	    $this->assertEquals(100, $r['PointBook']['point_balance']);
     }
+    
+    public function testPointCheckTrue(){
+	    $r = $this->PointUser->pointCheck(1, '50');
+	    $this->assertTrue($r);
+    }
+    
+    public function testPointCheckFalse(){
+	    $r = $this->PointUser->pointCheck(1, '500');
+	    $this->assertFalse($r);
+    }
 
 }
