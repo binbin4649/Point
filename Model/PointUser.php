@@ -110,7 +110,7 @@ class PointUser extends AppModel {
 			$datasource->commit();
 		}catch(Exception $e){
 			$datasource->rollback();
-			$this->log('PointUser.php PointAdd save error. : '.print_r($e, true));
+			$this->log('PointUser.php PointAdd save error. : ');
 			return false;
 		}
 		return $PointBook;
@@ -528,7 +528,7 @@ class PointUser extends AppModel {
 			$cakeEmail->send();
 			return true;
 		}catch(Exception $e){
-			$this->log('MccCall.php sendEmail error. '.$e->getMessage());
+			$this->log('PointUser.php sendEmail error. '.$e->getMessage());
 			return false;
 		}
 	}
