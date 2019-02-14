@@ -71,6 +71,7 @@ class PointBook extends AppModel {
 			    $datasource->commit();
 		    }catch(Exception $e){
 			    $datasource->rollback();
+			    $this->log('PointBook invoiceEndMonth error. '.print_r($e->getMessage(), true));
 			    $this->log('PointBook invoiceEndMonth error. '.print_r($PointUser, true));
 		    }
 	    }
