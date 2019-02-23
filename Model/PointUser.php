@@ -179,7 +179,7 @@ class PointUser extends AppModel {
 			$datasource->commit();
 		}catch(Exception $e){
 			$datasource->rollback();
-			$this->log('PointUser.php PointExp save error. : '.$e);
+			$this->log('PointUser.php PointExp save error. : '.print_r($e->getMessage(), true));
 			return false;
 		}
 		if($PointUser['PointUser']['pay_plan'] == 'auto'){
