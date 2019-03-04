@@ -77,5 +77,50 @@ class PointBook extends AppModel {
 	    }
 	    return true;
     }
+    
+    // 月別にuserのPointBookを返す
+    // $ym = YYYYMM
+    // $mypage_ids array : mypage_idの配列
+    public function monthlyUserBook($ym, $mypage_ids){
+		$conditions = [];
+		foreach($mypage_ids as $mypage_id){
+			$conditions['OR'][] = ['PointBook.mypage_id' => $mypage_id];
+		}
+		if($ym === null){
+		  $ym = date('Ym');
+		}
+		$year = substr($ym, 0, 4);
+		$month = substr($ym, 4, 2);
+		$conditions[] = ['PointBook.created >=' => date('Y-m-d 00:00:00', strtotime('first day of ' .$year.'-'.$month))];
+		$conditions[] = ['PointBook.created <=' => date('Y-m-d 23:59:59', strtotime('last day of ' .$year.'-'.$month))];
+		$books = $this->find('all', [
+		  'conditions' => $conditions,
+		  'order' => 'PointBook.created DESC',
+		  'recursive' => 1,
+		]);
+		return $books;
+    }
+    
+    
+    // reason と reason_id からMypageを書き換えて、月別にuserのPointBookを返す。 receive run のみ
+    public function monthlyReasonIdBook($ym, $mypage_ids, $plugin_name, $model_name){
+	    //$this->ccCall = ClassRegistry::init('Nos.NosCall');
+	    $this->ccCall = ClassRegistry::init($plugin_name.'.'.$model_name);
+	    $books = $this->monthlyUserBook($ym, $mypage_ids);
+	    foreach($books as $key=>$book){
+		    $reason = $book['PointBook']['reason'];
+		    if($reason == 'receive' || $reason == 'run' || $reason == 'call_out' || $reason == 'emergency'){
+			    $call = $this->ccCall->findById($book['PointBook']['reason_id'], null, null, -1);
+			    if($call){
+				    $new_mypage = $this->Mypage->findById($call[$model_name]['mypage_id'], null, null, -1);
+				    if($new_mypage){
+					    $books[$key]['Mypage'] = $new_mypage['Mypage'];
+				    }
+			    }
+		    }
+	    }
+	    return $books;
+    }
+    
 
 }
