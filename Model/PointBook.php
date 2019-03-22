@@ -14,6 +14,7 @@ class PointBook extends AppModel {
 			'foreignKey' => 'point_user_id']
 	];
 	
+	// 2019-03-20 した2つ　使ってないじゃないかと思う、
 	//締め作業振り分け
 	// cron 23:52 とかに実行する
 	public function invoiceJob(){
@@ -78,11 +79,8 @@ class PointBook extends AppModel {
 	    return true;
     }
     
-    // 月別にuserのPointBookを返す
-    // $ym = YYYYMM
-    // $mypage_ids array : mypage_idの配列
-    public function monthlyUserBook($ym, $mypage_ids){
-		$conditions = [];
+    public function monthlyUserBookConditions($ym, $mypage_ids){
+	    $conditions = [];
 		foreach($mypage_ids as $mypage_id){
 			$conditions['OR'][] = ['PointBook.mypage_id' => $mypage_id];
 		}
@@ -93,6 +91,14 @@ class PointBook extends AppModel {
 		$month = substr($ym, 4, 2);
 		$conditions[] = ['PointBook.created >=' => date('Y-m-d 00:00:00', strtotime('first day of ' .$year.'-'.$month))];
 		$conditions[] = ['PointBook.created <=' => date('Y-m-d 23:59:59', strtotime('last day of ' .$year.'-'.$month))];
+		return $conditions;
+    }
+    
+    // 月別にuserのPointBookを返す
+    // $ym = YYYYMM
+    // $mypage_ids array : mypage_idの配列
+    public function monthlyUserBook($ym, $mypage_ids){
+		$conditions = $this->monthlyUserBookConditions($ym, $mypage_ids);
 		$books = $this->find('all', [
 		  'conditions' => $conditions,
 		  'order' => 'PointBook.created DESC',
@@ -103,24 +109,33 @@ class PointBook extends AppModel {
     
     
     // reason と reason_id からMypageを書き換えて、月別にuserのPointBookを返す。 receive run のみ
-    public function monthlyReasonIdBook($ym, $mypage_ids, $plugin_name, $model_name){
+    public function monthlyReasonIdBook($ym, $mypage_ids, $plugin_name){
 	    //$this->ccCall = ClassRegistry::init('Nos.NosCall');
-	    $this->ccCall = ClassRegistry::init($plugin_name.'.'.$model_name);
+	    $cc_call_name = $plugin_name.'Call';
+	    $cc_user_name = $plugin_name.'User';
+	    $this->ccCall = ClassRegistry::init($plugin_name.'.'.$cc_call_name);
+	    $this->ccUser = ClassRegistry::init($plugin_name.'.'.$cc_user_name);
 	    $books = $this->monthlyUserBook($ym, $mypage_ids);
 	    foreach($books as $key=>$book){
 		    $reason = $book['PointBook']['reason'];
 		    if($reason == 'receive' || $reason == 'run' || $reason == 'call_out' || $reason == 'emergency'){
 			    $call = $this->ccCall->findById($book['PointBook']['reason_id'], null, null, -1);
 			    if($call){
-				    $new_mypage = $this->Mypage->findById($call[$model_name]['mypage_id'], null, null, -1);
+				    $mypage_id = $call[$cc_call_name]['mypage_id'];
+				    $new_mypage = $this->Mypage->findById($mypage_id, null, null, -1);
 				    if($new_mypage){
 					    $books[$key]['Mypage'] = $new_mypage['Mypage'];
+					    $cc_user = $this->ccUser->findByMypageId($mypage_id, null, null, -1);
+					    if($cc_user){
+						    $books[$key][$cc_user_name] = $cc_user[$cc_user_name];
+					    }
 				    }
 			    }
 		    }
 	    }
 	    return $books;
     }
+    
     
 
 }

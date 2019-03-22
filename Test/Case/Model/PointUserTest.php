@@ -6,7 +6,8 @@ class PointUserTest extends BaserTestCase {
     public $fixtures = array(
         'plugin.point.Default/PointUser',
         'plugin.point.Default/PointBook',
-        'plugin.members.Default/Mypage'
+        //'plugin.members.Default/Mypage'
+        'plugin.point.Default/Mypage'
     );
 
     public function setUp() {

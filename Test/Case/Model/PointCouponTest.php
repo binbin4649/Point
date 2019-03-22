@@ -6,7 +6,8 @@ class PointCouponTest extends BaserTestCase {
         'plugin.point.Default/PointUser',
         'plugin.point.Default/PointBook',
         'plugin.point.Default/PointCoupon',
-        'plugin.members.Default/Mypage'
+        //'plugin.members.Default/Mypage'
+        'plugin.point.Default/Mypage'
     );
 
     public function setUp() {
