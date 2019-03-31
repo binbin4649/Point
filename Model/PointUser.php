@@ -49,6 +49,9 @@ class PointUser extends AppModel {
 	// $point 正の整数
 	public function pointCheck($mypage_id, $point){
 		$PointUser = $this->findByMypageId($mypage_id, null, null , -1);
+		if($PointUser['PointUser']['pay_plan'] == 'pay_off'){
+			return true;
+		}
 		if($PointUser['PointUser']['point'] >= $point){
 			return true;
 		}else{
