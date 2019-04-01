@@ -59,6 +59,20 @@ class PointUser extends AppModel {
 		}
 	}
 	
+	//引ける使用可能ポイントが有るかチェック
+	// $point 正の整数
+	public function availablePointCheck($mypage_id, $point){
+		$PointUser = $this->findByMypageId($mypage_id, null, null , -1);
+		if($PointUser['PointUser']['pay_plan'] == 'pay_off'){
+			return true;
+		}
+		if($PointUser['PointUser']['available_point'] >= $point){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	//ポイント加算（ポイント購入）and 管理画面からポイント調整、イベントポイント, クーポンポイントなどを想定
 	//最小 $data = ['mypage_id'=>0, 'point'=>0, 'reason'=>''];
 	//最大 $data = ['mypage_id'=>0, 'point_user_id'=>0, 'point'=>0, 'reason'=>'', 'reason_id'=>'', 'pay_token'=>'', 'charge'=>0];
