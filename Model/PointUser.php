@@ -87,11 +87,16 @@ class PointUser extends AppModel {
 		
 		//ポイント計算
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
-		$new_point = $PointUser['PointUser']['point'] + $data['point'];
-		$new_available_point = $PointUser['PointUser']['available_point'] + $data['point'];
-		if($new_point < 0) return false; //ポイントはマイナスにならない。
-		if($new_available_point < 0) return false;//使用可能ポイントはマイナスにならない
-		
+		// pay_off はマイナス入る
+		if($PointUser['PointUser']['pay_plan'] == 'pay_off'){
+			$new_point = $PointUser['PointUser']['point'] + $data['point'];
+			$new_available_point = $PointUser['PointUser']['available_point'];
+		}else{
+			$new_point = $PointUser['PointUser']['point'] + $data['point'];
+			$new_available_point = $PointUser['PointUser']['available_point'] + $data['point'];
+			if($new_point < 0) return false; //ポイントはマイナスにならない。
+			if($new_available_point < 0) return false;//使用可能ポイントはマイナスにならない
+		}
 		$datasource = $this->getDataSource();
 		try{
 			$datasource->begin();

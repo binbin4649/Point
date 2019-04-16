@@ -24,6 +24,12 @@ class PointUserTest extends BaserTestCase {
         $this->assertEquals('1', $this->PointUser->getPointUserId(1));
     }
     
+    public function testPointAddポイントマイナス(){
+	    $data = ['mypage_id'=>4, 'point'=>'-200', 'reason'=>'test'];
+	    $r = $this->PointUser->pointAdd($data);
+	    $this->assertEquals('-1200', $r['PointBook']['point_balance']);
+    }
+    
     public function testFalsePointAdd(){
 	    // mypage_idが無い
 	    $data = ['mypage_id'=>'', 'point'=>'100', 'reason'=>'test'];
@@ -35,11 +41,6 @@ class PointUserTest extends BaserTestCase {
 	    
 	    // reasonが無い
 	    $data = ['mypage_id'=>1, 'point'=>'100', 'reason'=>''];
-	    $this->assertFalse($this->PointUser->pointAdd($data));
-    }
-    
-    public function testPointAddポイントはマイナスにならない(){
-	    $data = ['mypage_id'=>1, 'point'=>'-200', 'reason'=>'test'];
 	    $this->assertFalse($this->PointUser->pointAdd($data));
     }
     
