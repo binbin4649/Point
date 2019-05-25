@@ -6,7 +6,9 @@ class PointUserTest extends BaserTestCase {
     public $fixtures = array(
         'plugin.point.Default/PointUser',
         'plugin.point.Default/PointBook',
-        //'plugin.members.Default/Mypage'
+        //'plugin.members.Default/Mypage',
+        'plugin.nos.Default/NosCall',
+        'plugin.nos.Default/NosUser',
         'plugin.point.Default/Mypage'
     );
 
@@ -125,5 +127,13 @@ class PointUserTest extends BaserTestCase {
 	    $r = $this->PointUser->pointCheck(1, '500');
 	    $this->assertFalse($r);
     }
+    
+    public function testPayPlanEdit(){
+	    $data['PointUser']['mypage_id'] = 2;
+	    $data['PointUser']['pay_plan'] = 'pay_off';
+	    $r = $this->PointUser->payPlanEdit($data);
+	    $this->assertTrue($r);
+    }
+    
 
 }

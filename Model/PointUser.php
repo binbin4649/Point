@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__)."/../vendor/autoload.php");
 
 App::import('Model', 'AppModel');
+App::import('Model', 'Plugin');
 App::import('Model', 'Members.Mylog');
 App::uses('CakeEmail', 'Network/Email');
 
@@ -71,6 +72,26 @@ class PointUser extends AppModel {
 		}else{
 			return false;
 		}
+	}
+	
+	//支払い方法変更、pay_offに切り替わったら既存のcall予約をすべて削除する。
+	public function payPlanEdit($data){
+		$PointUser = $this->findByMypageId($data['PointUser']['mypage_id']);
+		$this->Plugin = new Plugin;
+		$pluginList = $this->Plugin->find('list', ['conditions'=>['Plugin.status'=>1]]);
+		if($data['PointUser']['pay_plan'] == 'pay_off' and $PointUser['PointUser']['pay_plan'] != 'pay_off'){
+			// Nosプラグインがあったら、の場合
+			foreach($pluginList as $plugin){
+				if($plugin == 'Nos'){
+					$this->NosCall = ClassRegistry::init('Nos.NosCall');
+					if(!$this->NosCall->deleteAllReserve($data['PointUser']['mypage_id'])){
+						$this->log('Pointuser.php payPlanEdit deleteAllReserve error: '.print_r($data, true));
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 	
 	//ポイント加算（ポイント購入）and 管理画面からポイント調整、イベントポイント, クーポンポイントなどを想定

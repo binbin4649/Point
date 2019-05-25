@@ -58,7 +58,8 @@
 
 <div class="section">
 <ul>
-	<li>[2018-09-02] この画面は請求書払に設定するために作った。[basic -> pay_off] を想定。[basic <-> auto]へ任意に変えてどうなるかはテストしてない。</li>
+	<li>[2018-05-25] [basic -> pay_off] 既存のcall予約(before)をすべて削除する。</li>
+	<li>[basic <-> auto]へ任意に変えてどうなるかはテストしてないし、やるべきでもない。本来はカード登録が必要。</li>
 	<li></li>
 	<li></li>
 </ul>

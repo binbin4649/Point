@@ -67,7 +67,7 @@ class PointUsersController extends PointAppController {
 	  if(empty($this->request->data)){
 		  $PointUser = $this->PointUser->findById($id);
 	  }else{
-		  if($this->PointUser->save($this->request->data)){
+		  if($this->PointUser->payPlanEdit($this->request->data)){
 	        $this->Mylog->record($id, 'point_user_edit', $user['id']);
 	        $this->setMessage( '編集しました');
 	        $this->redirect(array('action' => 'index'));
