@@ -510,8 +510,17 @@ class PointUser extends AppModel {
 	}
 	
 	public function sendEmailMain($to, $title = '', $body = '', $options = array()){
+		if(Configure::read('MccPlugin.TEST_MODE')){
+			$email_piece = Configure::read('MccPlugin.TEST_EMAIL_PIECE');
+			if(strpos($to, $email_piece) === false) return true;
+		}
+		if(!Configure::read('MccPlugin.TEST_MODE')){
+			$bcc = Configure::read('MccPlugin.sendMailBcc');
+			if(empty($bcc)){
+				$bcc = Configure::read('BcSite.email');
+			}
+		}
 		$this->siteConfigs = Configure::read('BcSite');
-		
 		$config = array(
 			'transport' => 'Smtp',
 			'host' => $this->siteConfigs['smtp_host'],
@@ -544,6 +553,9 @@ class PointUser extends AppModel {
 		$body['mailConfig']['site_email'] = $from;
 		
 		$cakeEmail->from($from, $fromName);
+		if(!empty($bcc)){
+			$cakeEmail->bcc($bcc);
+		}
 		$cakeEmail->replyTo($from);
 		$cakeEmail->returnPath($from);
 		$cakeEmail->viewRender('BcApp');

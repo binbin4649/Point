@@ -89,11 +89,33 @@ class PointUsersController extends PointAppController {
 
   //支払い金額を選択
   public function payselect(){
-	  $this->pageTitle = 'ポイント購入';
-	  $this->set('amountList', Configure::read('PointPlugin.AmountList'));
+	$this->pageTitle = 'ポイント購入';
+	// 有効のプラグインリストを取得
+    $pluginList = $this->Plugin->find('list', ['conditions'=>['Plugin.status'=>1]]);
+    $this->set('pluginList', $pluginList);
+	$this->set('amountList', Configure::read('PointPlugin.AmountList'));
   }
   
-  //決済画面
+  public function pay_method(){
+	  if($this->request->data){
+		  $data = $this->request->data['PointUser'];
+		  if(empty($data['charge']) or empty($data['method'])){
+			  $this->setMessage('金額、お支払い方法を選択してください。', true);
+			  $this->redirect(array('plugin'=>'point', 'controller'=>'point_users', 'action'=>'payselect'));
+		  }
+		  if($data['method'] == 'credit'){
+			  $this->redirect(array('plugin'=>'point', 'controller'=>'point_users', 'action'=>'payment/'.$data['charge']));
+		  }
+		  if($data['method'] == 'bitcash'){
+			  $this->redirect(array('plugin'=>'bitcash', 'controller'=>'bitcashes', 'action'=>'setle/'.$data['charge']));
+		  }
+	  }else{
+		  $this->redirect(array('plugin'=>'point', 'controller'=>'point_users', 'action'=>'payselect'));
+	  }
+  }
+  
+  
+  // payjp 決済画面
   public function payment($amount){
 	  $user = $this->BcAuth->user();
 	  $amountList = Configure::read('PointPlugin.AmountList');
