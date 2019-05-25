@@ -23,8 +23,16 @@ class PointBookTest extends BaserTestCase {
 		$ym = date('Ym');
 		$mypage_ids[] = '40';
 		$r = $this->PointBook->monthlyUserBook($ym, $mypage_ids);
-		$this->assertEquals('100', $r[0]['PointBook']['point']);
+		$this->assertEquals('-100', $r[0]['PointBook']['point']);
 	}
+	
+	public function testMonthlyTotalByPlan(){
+		$ym = null;
+		$mypage_ids = ['40'];
+		$r = $this->PointBook->monthlyTotalByPlan($ym, $mypage_ids);
+		$this->assertEquals(2, $r['receive:20']);
+	}
+	
 	
 
 }

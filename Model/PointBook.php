@@ -107,7 +107,6 @@ class PointBook extends AppModel {
 		return $books;
     }
     
-    
     // reason と reason_id からMypageを書き換えて、月別にuserのPointBookを返す。 receive run のみ
     public function monthlyReasonIdBook($ym, $mypage_ids, $plugin_name){
 	    //$this->ccCall = ClassRegistry::init('Nos.NosCall');
@@ -136,6 +135,26 @@ class PointBook extends AppModel {
 	    return $books;
     }
     
+    // [reason:point] point、reasonごとに月別集計、マイナスプラス逆転
+    public function monthlyTotalByPlan($ym, $mypage_ids){
+	    $monthlyTotal = [];
+	    $books = $this->monthlyUserBook($ym, $mypage_ids);
+	    foreach($books as $book){
+		    $point = $book['PointBook']['point'];
+		    if($point < 0){
+			    $point = abs($point);
+		    }else{
+			    $point = '-'.$point;
+		    }
+		    $reason = $book['PointBook']['reason'].':'.$point;
+		    if(empty($monthlyTotal[$reason])){
+			    $monthlyTotal[$reason] = 1;
+		    }else{
+			    $monthlyTotal[$reason] = $monthlyTotal[$reason] +1;
+		    }
+	    }
+	    return $monthlyTotal;
+    }
     
 
 }

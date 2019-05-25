@@ -500,16 +500,7 @@ class PointUser extends AppModel {
 		}
 	}
 	
-	//BCCの代わりにメール送信
 	public function sendEmail($to, $title = '', $body = '', $options = array()){
-		if(!Configure::read('MccPlugin.TEST_MODE')){
-			$bcc = Configure::read('MccPlugin.sendMailBcc');
-			$this->sendEmailMain($bcc, $title, $body, $options);
-		}
-		return $this->sendEmailMain($to, $title, $body, $options);
-	}
-	
-	public function sendEmailMain($to, $title = '', $body = '', $options = array()){
 		if(Configure::read('MccPlugin.TEST_MODE')){
 			$email_piece = Configure::read('MccPlugin.TEST_EMAIL_PIECE');
 			if(strpos($to, $email_piece) === false) return true;
@@ -520,6 +511,7 @@ class PointUser extends AppModel {
 				$bcc = Configure::read('BcSite.email');
 			}
 		}
+		
 		$this->siteConfigs = Configure::read('BcSite');
 		$config = array(
 			'transport' => 'Smtp',
