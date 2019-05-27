@@ -3,14 +3,26 @@ App::uses('PointUser', 'Point.Model');
 
 class PointUserTest extends BaserTestCase {
 	
-    public $fixtures = array(
-        'plugin.point.Default/PointUser',
-        'plugin.point.Default/PointBook',
-        //'plugin.members.Default/Mypage',
-        'plugin.nos.Default/NosCall',
-        'plugin.nos.Default/NosUser',
-        'plugin.point.Default/Mypage'
-    );
+	
+    public $fixtures;
+    
+    public function __construct(){
+	    $fixtures = array(
+	        'plugin.point.Default/PointUser',
+	        'plugin.point.Default/PointBook',
+	        'plugin.point.Default/Mypage'
+	    );
+	    $Plugin = ClassRegistry::init('Plugin');
+	    $lists = $Plugin->find('list');
+	    foreach($lists as $list){
+		    if($list == 'Nos'){
+			    $fixtures[] = 'plugin.point.Default/NosCall';
+			    $fixtures[] = 'plugin.point.Default/NosUser';
+		    } 
+	    }
+	    $this->fixtures = $fixtures;
+    }
+    
 
     public function setUp() {
         $this->PointUser = ClassRegistry::init('Point.PointUser');
