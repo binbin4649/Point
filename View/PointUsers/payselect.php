@@ -50,7 +50,13 @@
 			<ul>
 				<li>
 					「ビットキャッシュ」を選択すると、ビットキャッシュ決済画面に切り替わり、決済後当サイトへ戻り、ポイントが付与されます。
+				</li>
+				<li>
 					<a href="https://bitcash.jp/" target="_blank"><img src="https://bitcash.jp/static/logo/bc_w73px.gif" width="73" height="20" alt=" ビットキャッシュでお支払いいただけます" /></a>
+					ビットキャッシュは、ビットキャッシュ株式会社のサービスです。
+				</li>
+				<li>
+					ビットキャッシュについて詳しくは、<a href="/feature/bitcash_payment_operation">ビットキャッシュでのお支払い方法</a> をご参照ください。
 				</li>
 			</ul>
 			</small>
