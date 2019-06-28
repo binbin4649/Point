@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../../../vendor/Call-Center/Call_Center.php');
+require_once(dirname(__FILE__).'/../../../../Nos/vendor/Call-Center/Call_Center.php');
 
 class NosCallFixture extends CakeTestFixture {
 	
