@@ -172,7 +172,7 @@ class PointUser extends AppModel {
 		if(empty($data['reason'])) return false;
 		if(empty($data['reason_id'])) $data['reason_id'] = '';
 		
-		//ポイント計算、pay_planで処理方法を変える
+		//ポイント計算、pay_plan,reasonで処理方法を変える
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
 		if($PointUser['PointUser']['pay_plan'] == 'auto'){
 			$point = $data['point'];
@@ -185,6 +185,11 @@ class PointUser extends AppModel {
 			$credit = 0;
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = 0;
+		}elseif($data['reason'] == 'call_out' || $data['reason'] == 'emergency'){
+			//creditは変更しない
+			$point = $data['point'];
+			$new_point = $PointUser['PointUser']['point'] + $point;
+			$new_credit = $PointUser['PointUser']['credit'];
 		}else{
 			$point = $credit = $data['point'];
 			$new_point = $PointUser['PointUser']['point'] + $point;
