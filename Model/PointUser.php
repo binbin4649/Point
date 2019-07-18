@@ -91,7 +91,10 @@ class PointUser extends AppModel {
 				}
 			}
 		}
-		return true;
+		$PointUser['PointUser']['pay_plan'] = $data['PointUser']['pay_plan'];
+		$PointUser['PointUser']['invoice_plan'] = $data['PointUser']['invoice_plan'];
+		$this->create();
+		return $this->save($PointUser);
 	}
 	
 	//ポイント加算（ポイント購入）and 管理画面からポイント調整、イベントポイント, クーポンポイントなどを想定
