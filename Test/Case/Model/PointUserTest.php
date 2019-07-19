@@ -143,8 +143,9 @@ class PointUserTest extends BaserTestCase {
     public function testPayPlanEdit(){
 	    $data['PointUser']['mypage_id'] = 2;
 	    $data['PointUser']['pay_plan'] = 'pay_off';
+	    $data['PointUser']['invoice_plan'] = 'pm_month';
 	    $r = $this->PointUser->payPlanEdit($data);
-	    $this->assertTrue($r);
+	    $this->assertEquals('pay_off', $r['PointUser']['pay_plan']);
     }
     
 
