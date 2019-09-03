@@ -190,6 +190,7 @@ class PointUser extends AppModel {
 			$point = $data['point'];
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = $PointUser['PointUser']['credit'];
+			$credit = 0;
 		}else{
 			$point = $credit = $data['point'];
 			$new_point = $PointUser['PointUser']['point'] + $point;
