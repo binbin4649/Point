@@ -104,6 +104,22 @@ class PointUserTest extends BaserTestCase {
 	    $this->assertEquals('test', $r['PointBook']['reason']);
     }
     
+    public function testPointExpAutoで減算credit追加(){
+	    $data = ['mypage_id'=>3, 'point'=>'-45', 'reason'=>'test', 'credit'=>'-50'];
+	    $r = $this->PointUser->pointExp($data);
+	    $this->assertEquals(0, $r['PointBook']['credit']);
+	    $this->assertEquals(9955, $r['PointBook']['point_balance']);
+	    $this->assertEquals('test', $r['PointBook']['reason']);
+    }
+    
+    public function testPointExpBasicで減算credit追加(){
+	    $data = ['mypage_id'=>2, 'point'=>'-45', 'reason'=>'test', 'credit'=>'-50'];
+	    $r = $this->PointUser->pointExp($data);
+	    $this->assertEquals(55, $r['PointBook']['point_balance']);
+	    $this->assertEquals(50, $r['PointBook']['credit_balance']);
+	    $this->assertEquals('test', $r['PointBook']['reason']);
+    }
+    
     public function testFalseCreditAdd(){
 	    // mypage_idが無い
 	    $data = ['mypage_id'=>'', 'point'=>'50', 'reason'=>'test'];
