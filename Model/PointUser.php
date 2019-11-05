@@ -190,11 +190,12 @@ class PointUser extends AppModel {
 		try{
 			$datasource->begin();
 			$this->create();
-			$saveField = ['point', 'credit'];
+			$saveField = ['point', 'credit', 'available_point'];
 			$save_point_user = ['PointUser' => [
 				'id' => $PointUser['PointUser']['id'],
 				'point' => $new_point,
 				'credit' => $new_credit,
+				'available_point' => $new_point - $new_credit,
 			]];
 			if(!$this->save($save_point_user, null, $saveField)){
 				throw new Exception();
