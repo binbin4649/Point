@@ -156,7 +156,7 @@ class PointUser extends AppModel {
 			$datasource->commit();
 		}catch(Exception $e){
 			$datasource->rollback();
-			$this->log('PointUser.php PointAdd save error. : ');
+			$this->log('PointUser.php PointAdd save error. : '.print_r($e->getMessage(), true));
 			return false;
 		}
 		return $PointBook;
