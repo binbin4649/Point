@@ -29,6 +29,12 @@
 			</td>
 		</tr>
 		<tr>
+			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.available_point', '利用可能ポイント') ?></th>
+			<td class="col-input">
+				<?php echo $this->request->data['PointUser']['available_point']; ?>
+			</td>
+		</tr>
+		<tr>
 			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.point', '増減ポイント') ?></th>
 			<td class="col-input">
 			<?php echo $this->BcForm->input('PointUser.point', array('type'=>'text', 'value' => 0)) ?>
