@@ -45,6 +45,32 @@ class PointCouponsController extends PointAppController {
     $this->set('usePlan', $usePlan);
   }
   
+  public function admin_csv_download($division = null){
+		$coupons = $this->PointCoupon->find('all', ['conditions'=>['PointCoupon.division'=>$division]]);
+		$this->autoRender = false;
+		$this->response->type('csv');
+		$this->response->download($division.".csv");
+		$fp = fopen('php://output','w');
+		stream_filter_append($fp, 'convert.iconv.UTF-8/CP932', STREAM_FILTER_WRITE);
+		$head = ['code', 'name', 'division', 'start','finish', 'point', 'use_plan', 'use_time', 'generated', 'created'];
+		fputcsv($fp, $head);
+		foreach($coupons as $cp){
+		  $output = [];
+		  $output['code'] = $cp['PointCoupon']['code'];
+		  $output['name'] = $cp['PointCoupon']['name'];
+		  $output['division'] = $cp['PointCoupon']['division'];
+		  $output['start'] = $cp['PointCoupon']['start'];
+		  $output['finish'] = $cp['PointCoupon']['finish'];
+		  $output['point'] = $cp['PointCoupon']['point'];
+		  $output['use_plan'] = $cp['PointCoupon']['use_plan'];
+		  $output['use_time'] = $cp['PointCoupon']['use_time'];
+		  $output['generated'] = $cp['PointCoupon']['generated'];
+		  $output['created'] = $cp['PointCoupon']['created'];
+		  fputcsv($fp, $output);
+		}
+		fclose($fp);
+	}
+  
   //クーポン追加
   public function admin_add(){
 	  $this->pageTitle = 'クーポン生成';
