@@ -156,7 +156,7 @@ class PointUser extends AppModel {
 			$datasource->commit();
 		}catch(Exception $e){
 			$datasource->rollback();
-			$this->log('PointUser.php PointAdd save error. : ');
+			$this->log('PointUser.php PointAdd save error. : '.print_r($e->getMessage(), true));
 			return false;
 		}
 		return $PointBook;
@@ -164,43 +164,26 @@ class PointUser extends AppModel {
 	
 	//ポイント減算（サービス消費）
 	// $data['point'] 負の正数指定
-	//$data = ['mypage_id'=>0, 'point_user_id'=>0, 'point'=>0, 'reason'=>'', 'reason_id'=>''];
+	// $data['credit'] pointとcreditが一致しない場合に指定。例）利用時にポイントを引く場合など、['point'=>'-45', 'credit'=>'-50']
+	//$data = ['mypage_id'=>0, 'point_user_id'=>0, 'point'=>0, 'reason'=>'', 'reason_id'=>'', 'credit'=>'0'];
 	public function pointExp($data = []){
 		if(empty($data['mypage_id'])) return false;
 		if(empty($data['point_user_id'])) $data['point_user_id'] = $this->getPointUserId($data['mypage_id']);
 		if(empty($data['point']) && $data['point'] == 0) return false; //0の数字は指定できない。
 		if(empty($data['reason'])) return false;
 		if(empty($data['reason_id'])) $data['reason_id'] = '';
+		if(empty($data['credit'])) $data['credit'] = '';
 		
 		//ポイント計算、pay_plan,reasonで処理方法を変える
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
-		if($PointUser['PointUser']['pay_plan'] == 'auto'){
-			$point = $data['point'];
-			$credit = 0;
-			$new_point = $PointUser['PointUser']['point'] + $point;
-			$new_credit = 0;
-			$new_available_point = $new_point;
-			if($new_point < 0) return false; //ポイントはマイナスにならない。
-		}elseif($PointUser['PointUser']['pay_plan'] == 'pay_off'){
-			$point = $data['point'];
-			$credit = 0;
-			$new_point = $PointUser['PointUser']['point'] + $point;
-			$new_credit = 0;
-			$new_available_point = $new_point;
-		}elseif($data['reason'] == 'call_out' || $data['reason'] == 'emergency'){
-			//creditは変更しない
-			$point = $data['point'];
-			$new_point = $PointUser['PointUser']['point'] + $point;
-			$new_credit = $PointUser['PointUser']['credit'];
-			$credit = 0;
-			$new_available_point = $new_point - $new_credit;
+		$point_cal = $this->pointCal($PointUser, $data);
+		if($point_cal){
+			$point = $point_cal['point'];
+			$credit = $point_cal['credit'];
+			$new_point = $point_cal['new_point'];
+			$new_credit = $point_cal['new_credit'];
 		}else{
-			$point = $credit = $data['point'];
-			$new_point = $PointUser['PointUser']['point'] + $point;
-			$new_credit = $PointUser['PointUser']['credit'] + $credit;
-			$new_available_point = $new_point - $new_credit;
-			if($new_point < 0) return false; //ポイント、クレジットはマイナスにならない。
-			if($new_credit < 0) return false;
+			return false;
 		}
 		
 		$datasource = $this->getDataSource();
@@ -212,7 +195,7 @@ class PointUser extends AppModel {
 				'id' => $PointUser['PointUser']['id'],
 				'point' => $new_point,
 				'credit' => $new_credit,
-				'available_point' => $new_available_point,
+				'available_point' => $new_point - $new_credit,
 			]];
 			if(!$this->save($save_point_user, null, $saveField)){
 				throw new Exception();
@@ -243,6 +226,49 @@ class PointUser extends AppModel {
 			$this->payjpRunAutoCharge($data['mypage_id']);
 		}
 		return $PointBook;
+	}
+	
+	// ポイント計算　pointExpから引き継ぎ分離
+	public function pointCal($PointUser, $data){
+		$return = [];
+		if($PointUser['PointUser']['pay_plan'] == 'auto'){
+			$point = $data['point'];
+			$credit = 0;
+			$new_point = $PointUser['PointUser']['point'] + $point;
+			$new_credit = 0;
+			if($new_point < 0) return false; //ポイントはマイナスにならない。
+		}elseif($PointUser['PointUser']['pay_plan'] == 'pay_off'){
+			$point = $data['point'];
+			$credit = 0;
+			$new_point = $PointUser['PointUser']['point'] + $point;
+			$new_credit = 0;
+		}elseif($data['reason'] == 'call_out' || $data['reason'] == 'emergency'){
+			//creditは変更しない
+			$point = $data['point'];
+			$new_point = $PointUser['PointUser']['point'] + $point;
+			$new_credit = $PointUser['PointUser']['credit'];
+			$credit = 0;
+		}else{
+			if(!empty($data['credit'])){
+				$point = $data['point'];
+				$credit = $data['credit'];
+				$new_point = $PointUser['PointUser']['point'] + $point;
+				$new_credit = $PointUser['PointUser']['credit'] + $credit;
+			}else{
+				$point = $credit = $data['point'];
+				$new_point = $PointUser['PointUser']['point'] + $point;
+				$new_credit = $PointUser['PointUser']['credit'] + $credit;
+			}
+			if($new_point < 0) return false; //ポイント、クレジットはマイナスにならない。
+			if($new_credit < 0) return false;
+		}
+		$return = [
+			'point' => $point,
+			'credit' => $credit,
+			'new_point' => $new_point,
+			'new_credit' => $new_credit
+		];
+		return $return;
 	}
 	
 	//クレジット加算（サービス予約） $data['point'] 正の正数指定

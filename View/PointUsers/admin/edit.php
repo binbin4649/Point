@@ -20,7 +20,8 @@
 			<th class="col-head" width="150">現ポイント</th>
 			<td class="col-input">
 				point:<?php echo $this->request->data['PointUser']['point']; ?><br>
-				credit:<?php echo $this->request->data['PointUser']['credit']; ?>
+				credit:<?php echo $this->request->data['PointUser']['credit']; ?><br>
+				available_point:<?php echo $this->request->data['PointUser']['available_point']; ?>
 			</td>
 		</tr>
 		<tr>

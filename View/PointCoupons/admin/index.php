@@ -47,3 +47,14 @@ plan:<?php echo $this->BcForm->input('PointCoupon.use_plan', array('type'=>'sele
 </tbody>
 </table>
 </div>
+<div class="section">
+	<p>
+		division で検索するとCSVダウンロードができるようになる。
+	</p>
+	<?php if(!empty($this->request->data['PointCoupon']['division'])): ?>
+	<?php $division = $this->request->data['PointCoupon']['division']; ?>
+	<ul>
+		<li><?php echo $this->BcBaser->link('CSVダウンロード', '/admin/point/point_coupons/csv_download/'.$division, [], 'CSVをダウンロードします。よろしいですか？'); ?></li>
+	</ul>
+	<?php endif; ?>
+</div>
