@@ -179,22 +179,26 @@ class PointUser extends AppModel {
 			$credit = 0;
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = 0;
+			$new_available_point = $new_point;
 			if($new_point < 0) return false; //ポイントはマイナスにならない。
 		}elseif($PointUser['PointUser']['pay_plan'] == 'pay_off'){
 			$point = $data['point'];
 			$credit = 0;
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = 0;
+			$new_available_point = $new_point;
 		}elseif($data['reason'] == 'call_out' || $data['reason'] == 'emergency'){
 			//creditは変更しない
 			$point = $data['point'];
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = $PointUser['PointUser']['credit'];
 			$credit = 0;
+			$new_available_point = $new_point - $new_credit;
 		}else{
 			$point = $credit = $data['point'];
 			$new_point = $PointUser['PointUser']['point'] + $point;
 			$new_credit = $PointUser['PointUser']['credit'] + $credit;
+			$new_available_point = $new_point - $new_credit;
 			if($new_point < 0) return false; //ポイント、クレジットはマイナスにならない。
 			if($new_credit < 0) return false;
 		}
@@ -203,11 +207,12 @@ class PointUser extends AppModel {
 		try{
 			$datasource->begin();
 			$this->create();
-			$saveField = ['point', 'credit'];
+			$saveField = ['point', 'credit', 'available_point'];
 			$save_point_user = ['PointUser' => [
 				'id' => $PointUser['PointUser']['id'],
 				'point' => $new_point,
 				'credit' => $new_credit,
+				'available_point' => $new_available_point,
 			]];
 			if(!$this->save($save_point_user, null, $saveField)){
 				throw new Exception();
