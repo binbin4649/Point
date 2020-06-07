@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../../../../Nos/vendor/Call-Center/Call_Center.php');
+//require_once(dirname(__FILE__).'/../../../../Nos/vendor/Call-Center/Call_Center.php');
 
 class NosCallFixture extends CakeTestFixture {
 	
@@ -7,9 +7,12 @@ class NosCallFixture extends CakeTestFixture {
 	
 	
 	public function init(){
+/*
 		$this->CallCenter = new Call_Center;
 		$this->CallCenter->pluginName = 'Nos';
+*/
 		$per = Configure::read('MccPlugin.MovableTiming');
+		$this->Twilio = ClassRegistry::init('Twilio.Twilio');
 		
 		$this->records = array(
 			array(
@@ -72,7 +75,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 18,
 				'nos_user_id' => 18,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i", strtotime("+60 minute")), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i", strtotime("+60 minute")), $per)->format('H:i'),
 				'status' => 'before',
 				'call_plan' => 'receive',
 				'mail_submit' => NULL,
@@ -84,7 +87,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 18,
 				'nos_user_id' => 18,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i"), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i"), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'basic',
 				'call_time' => 1,
@@ -96,7 +99,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 10,
 				'nos_user_id' => 10,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i", strtotime("+30 minute")), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i", strtotime("+30 minute")), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'receive',
 				'call_time' => null,
@@ -108,7 +111,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 18,
 				'nos_user_id' => 18,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i", strtotime("+30 minute")), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i", strtotime("+30 minute")), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'receive',
 				'call_time' => null,
@@ -120,7 +123,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 10,
 				'nos_user_id' => 10,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i"), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i"), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'receive',
 				'call_time' => null,
@@ -132,7 +135,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 10,
 				'nos_user_id' => 10,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i"), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i"), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'receive',
 				'call_time' => 4,
@@ -144,7 +147,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 19,
 				'nos_user_id' => 19,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i", strtotime("-10 minute")), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i", strtotime("-10 minute")), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'receive',
 				'call_time' => 4,
@@ -156,7 +159,7 @@ class NosCallFixture extends CakeTestFixture {
 				'mypage_id' => 18,
 				'nos_user_id' => 18,
 				'reserve_date' => date("Y-m-d"),
-				'reserve_time' => $this->CallCenter->floorPerTime(date("H:i"), $per)->format('H:i'),
+				'reserve_time' => $this->Twilio->floorPerTime(date("H:i"), $per)->format('H:i'),
 				'status' => 'run',
 				'call_plan' => 'receive',
 				'call_time' => 3,
