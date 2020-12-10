@@ -27,3 +27,16 @@
 	</ul>
 	<small>ポイント履歴にて、これまでのポイント履歴が一覧できます。</small>
 </div>
+
+<?php if(Configure::read('PointPlugin.VC-EC-ID')): ?>
+	<?php $ecid = Configure::read('PointPlugin.VC-EC-ID');  ?>
+	<?php $siteUrl = Configure::read('BcEnv.siteUrl'); ?>
+	<!----- ValueCommerce CV_DIV_F：ここから ----->
+	<div data-vc-ec-id="<?php echo $ecid; ?>"
+	data-vc-sales-amount="<?php echo $book['PointBook']['charge']; ?>"
+	data-vc-order-id="<?php echo $book['PointBook']['id']; ?>"
+	data-vc-src="<?php echo $siteUrl; ?>vc/vc_sample-v01.php">
+	</div>
+	<script type="text/javascript" src="//cv.valuecommerce.com/vccv.min.js"></script>
+	<!----- ValueCommerce CV_DIV_F：ここまで ----->
+<?php endif; ?>
