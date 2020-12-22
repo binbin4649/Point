@@ -223,6 +223,7 @@ class PointUser extends AppModel {
 			return false;
 		}
 		if($PointUser['PointUser']['pay_plan'] == 'auto'){
+			sleep('1');//2重決済防止
 			$this->payjpRunAutoCharge($data['mypage_id']);
 		}
 		return $PointBook;
