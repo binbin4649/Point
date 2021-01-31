@@ -24,7 +24,13 @@ $config['PointPlugin.ReasonList'] = [
 	'other' => 'その他',
 ];
 
-$config['PointPlugin.PayPlanList'] = ['basic'=>'basic', 'auto'=>'auto', 'pay_off'=>'pay_off'];
+$config['PointPlugin.PayPlanList'] = [
+	'basic'=>'basic', //通常。都度ポイント購入
+	'auto'=>'auto', // オートチャージ
+	'pay_off'=>'pay_off',// 支払いなし、請求書払とか
+	'month'=>'month',//月額課金
+	'reward'=>'reward'//報酬計算、精算
+];
 $config['PointPlugin.InvoicePlanList'] = ['end_month'=>'末締翌月末払'];
 
 // 決済金額の種類。リスト。 決済金額 => 発行されるポイント

@@ -1,5 +1,7 @@
 <?php 
 
+// komoju関連は全て中途半端です。
+
 class PointUsersController extends PointAppController {
   
   public $name = 'PointUsers';
@@ -22,7 +24,7 @@ class PointUsersController extends PointAppController {
     if(preg_match('/^admin_/', $this->action)){
 	   $this->subMenuElements = array('point');
     }
-    $this->Security->unlockedActions = array('payment', 'auto_charge', 'komoju', 'komoju_webhook');
+    $this->Security->unlockedActions = array('payment', 'auto_charge', 'subscription', 'komoju', 'komoju_webhook');
   }
 
   //ポイントユーザー一覧。ユーザーを検索してポイント調整できる
@@ -244,6 +246,48 @@ class PointUsersController extends PointAppController {
 	  $this->set('PointUser', $PointUser);
   }
   
+  
+  //月額課金 pay_plan未対応（変更されたら日割りとか面倒くさいわ）
+  public function subscription(){
+	  $user = $this->BcAuth->user();
+	  $this->pageTitle = 'クレジットカード登録(お支払い)';
+	  $PointUser = $this->PointUser->getPointUser($user['id']);
+	  if($this->request->data){
+		  $charge = $this->request->data['PointUser']['charge'];
+		  $payjp_token = $this->request->data['payjp-token'];
+		  if(empty($payjp_token)){
+			  $this->setMessage('カード情報が入力されていません。', true);
+			  $this->redirect(array('controller'=>'point_users', 'action' => 'subscription'));
+		  }
+		  if($this->PointUser->payjpNewCustomer($payjp_token, 'month', $user['id'])){
+			  $this->setMessage('クレジットカード登録。初月の決算を行いました。');
+			  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+		  }else{
+			  $this->setMessage('クレジットカードを登録しました。');
+			  $this->redirect(array('plugin' => 'members','controller'=>'mypages', 'action' => 'index'));
+		  }
+	  }
+	  $this->set('AmountList', Configure::read('PointPlugin.AmountList'));
+	  $this->set('payjp_public', Configure::read('payjp.public'));
+	  $this->set('PointUser', $PointUser);
+  }
+  
+  public function cancell_subscription(){
+	  $this->autoRender = false;
+	  $user = $this->BcAuth->user();
+	  $PointUser = $this->PointUser->getPointUser($user['id']);
+	  if(empty($PointUser['PointUser']['payjp_card_token'])){
+		  $this->setMessage('登録されていません。', true);
+		  $this->redirect(array('controller'=>'point_users', 'action' => 'subscription'));
+	  }else{
+		  if($this->PointUser->payjpCustomerCancell($user['id'])){
+			  $this->setMessage('クレジットカードの登録を解除しました。');
+		  }else{
+			  $this->setMessage('エラー：解除に失敗しました。', true);
+		  }
+	  }
+	  $this->redirect(array('controller'=>'point_users', 'action' => 'subscription'));
+  }
   
   public function komoju(){
 	  $amountList = Configure::read('PointPlugin.AmountList');

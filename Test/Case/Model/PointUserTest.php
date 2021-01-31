@@ -10,7 +10,8 @@ class PointUserTest extends BaserTestCase {
 	    $fixtures = array(
 	        'plugin.point.Default/PointUser',
 	        'plugin.point.Default/PointBook',
-	        'plugin.point.Default/Mypage'
+	        'plugin.point.Default/Mypage',
+	        'plugin.point.Default/Mylog',
 	    );
 	    $Plugin = ClassRegistry::init('Plugin');
 	    $lists = $Plugin->find('list');
@@ -25,6 +26,7 @@ class PointUserTest extends BaserTestCase {
     
 
     public function setUp() {
+	    Configure::write('MccPlugin.TEST_MODE', true);
         $this->PointUser = ClassRegistry::init('Point.PointUser');
         parent::setUp();
     }
@@ -33,7 +35,68 @@ class PointUserTest extends BaserTestCase {
 	    unset($this->PointUser);
 	    parent::tearDown();
     }
-
+	
+	public function testMonthlyRangeTrue(){
+		$mypage_id = '2';
+		$target_date = '20210104';
+		$r = $this->PointUser->monthlyRange($mypage_id, $target_date);
+		$this->assertTrue($r);
+	}
+	
+	public function testMonthlyRangeFalse(){
+		$mypage_id = '2';
+		$target_date = '20210105';
+		$r = $this->PointUser->monthlyRange($mypage_id, $target_date);
+		$this->assertFalse($r);
+	}
+	
+	public function testCustomerChargeCheck(){
+		$pointUser = $this->PointUser->findByMypageId('5');
+		$r = $this->PointUser->customerChargeCheck($pointUser);
+		$this->assertFalse($r);
+	}
+	
+	public function testRunSubscription(){
+		$r = $this->PointUser->runSubscription();
+		$this->assertTrue($r);
+	}
+	
+	public function testCustomerChargeAfter(){
+		$pointUser = $this->PointUser->findByMypageId('2');
+		$pay_token = 'testtesttest';
+		$amount = 2200;
+		$r = $this->PointUser->customerChargeAfter($pointUser, $pay_token, $amount);
+		$this->assertTrue($r);
+	}
+	
+	public function testNextMonthExpdate2(){
+		$exp_date = '2020-12-05';
+		$base_day = '05';
+		$r = $this->PointUser->nextMonthExpdate($exp_date, $base_day);
+		$answer = date('Y-m-05', strtotime('last day of next month'));
+		$this->assertEquals($answer, $r);
+	}
+	
+	public function testNextMonthExpdate(){
+		$exp_date = '2020-12-31';
+		$base_day = '31';
+		$r = $this->PointUser->nextMonthExpdate($exp_date, $base_day);
+		$answer = date('Y-m-d', strtotime('last day of next month'));
+		$this->assertEquals($answer, $r);
+	}
+	
+	public function testIsInExpdateFalse(){
+		$mypage_id = '2';
+		$r = $this->PointUser->isInExpdate($mypage_id);
+		$this->assertFalse($r);
+	}
+	
+	public function testIsInExpdate(){
+		$mypage_id = '1';
+		$r = $this->PointUser->isInExpdate($mypage_id);
+		$this->assertFalse($r);
+	}
+	
     public function testGetPointUserId(){
         $this->assertEquals('1', $this->PointUser->getPointUserId(1));
     }
@@ -160,6 +223,7 @@ class PointUserTest extends BaserTestCase {
 	    $data['PointUser']['mypage_id'] = 2;
 	    $data['PointUser']['pay_plan'] = 'pay_off';
 	    $data['PointUser']['invoice_plan'] = 'pm_month';
+	    $data['PointUser']['exp_date'] = '';
 	    $r = $this->PointUser->payPlanEdit($data);
 	    $this->assertEquals('pay_off', $r['PointUser']['pay_plan']);
     }

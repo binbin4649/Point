@@ -49,6 +49,13 @@
 				<?php echo $this->BcForm->error('PointUser.invoice_plan') ?></td>
 			</td>
 		</tr>
+		<tr>
+			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.exp_date', '利用期限') ?></th>
+			<td class="col-input">
+				<?php echo $this->BcForm->datepicker('PointUser.exp_date', array('type'=>'text')) ?>
+				<?php echo $this->BcForm->error('PointUser.exp_date') ?></td>
+			</td>
+		</tr>
 	</table>
 </div>
 <!-- button -->
@@ -61,7 +68,7 @@
 <ul>
 	<li>[2018-05-25] [basic -> pay_off] 既存のcall予約(before)をすべて削除する。</li>
 	<li>[basic <-> auto]へ任意に変えてどうなるかはテストしてないし、やるべきでもない。本来はカード登録が必要。</li>
-	<li></li>
+	<li>支払プラン：month　の場合、charge_point は課金基準日。</li>
 	<li></li>
 </ul>
 </div>
