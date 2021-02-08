@@ -14,7 +14,7 @@ class PointUserFixture extends CakeTestFixture {
 				'credit' => 0,
 				'available_point' => 100,
 				'pay_plan' => 'basic',
-				'exp_date' => '',
+				'exp_date' => date('Y-m-d', strtotime('+10 day')),
 				'created' => '2018-07-30 16:26:01',
 				'modified' => '2018-07-30 16:26:01',
 			],

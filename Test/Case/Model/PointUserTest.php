@@ -36,6 +36,28 @@ class PointUserTest extends BaserTestCase {
 	    parent::tearDown();
     }
 	
+	public function testNextMonthExpdate(){
+		$exp_date = '2021-01-31';
+		$base_day = '31';
+		$strtime = '2021-01-31';
+		$r = $this->PointUser->nextMonthExpdate($exp_date, $base_day, $strtime);
+		$this->assertEquals('2021-02-28', $r);
+	}
+	
+	public function testNextMonthExpdate2(){
+		$exp_date = '';
+		$base_day = '';
+		$r = $this->PointUser->nextMonthExpdate($exp_date, $base_day);
+		$this->assertTrue(!empty($r));
+	}
+	
+	public function testExtensionDays(){
+		$mypage_id = '1';
+		$days = '3';
+		$r = $this->PointUser->extensionDays($mypage_id, $days);
+		$this->assertTrue($r);
+	}
+	
 	public function testMonthlyRangeTrue(){
 		$mypage_id = '2';
 		$target_date = '20210104';
@@ -69,20 +91,16 @@ class PointUserTest extends BaserTestCase {
 		$this->assertTrue($r);
 	}
 	
-	public function testNextMonthExpdate2(){
-		$exp_date = '2020-12-05';
-		$base_day = '05';
-		$r = $this->PointUser->nextMonthExpdate($exp_date, $base_day);
-		$answer = date('Y-m-05', strtotime('last day of next month'));
-		$this->assertEquals($answer, $r);
+	public function testGetNextMonth(){
+		$date = '2020-12-05';
+		$r = $this->PointUser->getCurrectedNextMonth($date);
+		$this->assertEquals('2021-01-05', $r);
 	}
 	
-	public function testNextMonthExpdate(){
-		$exp_date = '2020-12-31';
-		$base_day = '31';
-		$r = $this->PointUser->nextMonthExpdate($exp_date, $base_day);
-		$answer = date('Y-m-d', strtotime('last day of next month'));
-		$this->assertEquals($answer, $r);
+	public function testGetNextMonth2(){
+		$date = '2021-01-30';
+		$r = $this->PointUser->getCurrectedNextMonth($date);
+		$this->assertEquals('2021-02-28', $r);
 	}
 	
 	public function testIsInExpdateFalse(){
@@ -94,7 +112,7 @@ class PointUserTest extends BaserTestCase {
 	public function testIsInExpdate(){
 		$mypage_id = '1';
 		$r = $this->PointUser->isInExpdate($mypage_id);
-		$this->assertFalse($r);
+		$this->assertTrue($r);
 	}
 	
     public function testGetPointUserId(){

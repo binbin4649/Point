@@ -622,6 +622,29 @@ class PointUser extends AppModel {
 		return true;
 	}
 	
+	// 指定日数(days)分、有効期限を延長
+	public function extensionDays($mypage_id, $days){
+		if(empty($mypage_id) || empty($days)){
+			return false;
+		}
+		$PointUser = $this->getPointUser($mypage_id);
+		$exp_date = $PointUser['PointUser']['exp_date'];
+		if(strtotime('today') > strtotime($exp_date)){
+			$new_exp_date = date("Y-m-d", strtotime("+".$days." day"));
+		}else{
+			$new_exp_date = date("Y-m-d", strtotime($exp_date." +".$days." day"));
+		}
+		$this->create();
+		$PointUser['PointUser']['exp_date'] = $new_exp_date;
+		if($this->save($PointUser)){
+			$this->Mylog->record($mypage_id, 'extension_'.$days.'day');
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+	
 	// 有効なカードは登録されているか？ 有効 = true
 	// 登録されてない場合も有効期限内なら true
 	public function monthlyRange($mypage_id, $target_date){
@@ -666,39 +689,37 @@ class PointUser extends AppModel {
 	
 	// 次の　exp_date　を返す。基準日で計算するので未来の延長には対応していない。
 	// base_day = charge_point = 登録日 = 基準日　30日に登録したら30
-	public function nextMonthExpdate($exp_date, $base_day){
-		if(empty($exp_date) || time() > strtotime($exp_date.' 00:00:00')){
-			// 無いまたは過去だったら今日を入れる。1ヶ月とか間を空けて再登録した場合に、
-			$exp_date = date('Y-m-d');
+	// $strtime テスト用
+	public function nextMonthExpdate($exp_date, $base_day, $strtime = 'today'){
+		if(empty($exp_date) || strtotime($strtime) > strtotime($exp_date)){
+			$today = date('Y-m-d', strtotime($strtime));
+			return $this->getCurrectedNextMonth($today);
 		}
-		if(empty($base_day)){
-			$base_day = date('d');
+		if((int)$base_day <= 28){
+			return $this->getCurrectedNextMonth($exp_date);
 		}
 		$year = date('Y', strtotime($exp_date));
 		$month = date('m', strtotime($exp_date));
-		$date = new DateTime();
-		$date->setDate($year, $month, $base_day);
-		$next = $this->getNextMonth($date);
-		return $next->format('Y-m-d');
+		return $this->getCurrectedNextMonth($year.'-'.$month.'-'.$base_day);
 	}
 	
-	// 翌月の同じ日の日付を返す
-	// https://qiita.com/minorut/items/63d194348775b7dc8a9f
-	public function getNextMonth($baseDate){
-	    $date = clone $baseDate;
-	    $day = (int)$date->format('d');
-	    if ($day <= 28) {
-	        $date->modify('next month');
-	        return $date;
-	    }
-	    $date->modify('first day of next month');
-	    $year  = (int)$date->format('Y');
-	    $month = (int)$date->format('m');
-	    if (!checkdate($month, $day, $year)) {
-	        $day = (int)$date->format('t');
-	    }
-	    $date->setDate($year, $month, $day);
-	    return $date;
+	// https://gist.github.com/ogaaaan/1117729
+	public function getCurrectedNextMonth($date)
+	{
+		// 年月日に分断
+		$y = date('Y', strtotime($date));
+		$m = date('n', strtotime($date));
+		$d = date('j', strtotime($date));
+		
+		// 年越しの処理
+		if($m+1>12) { $m=1; $y++; } else { $m++; }
+		
+		// 1ヶ月後の日付生成
+		if(checkdate($m, $d, $y)) {
+		  return date('Y-m-d', strtotime(sprintf('%04d-%02d-%02d', $y, $m, $d)));
+		} else {
+		  return date('Y-m-d', strtotime(sprintf('%04d-%02d-01 -1 day', $y, ($m+1))));
+		}
 	}
 	
 	//顧客　新規登録
@@ -851,7 +872,7 @@ class PointUser extends AppModel {
 		$pointUser['PointUser']['payjp_card_token'] = NULL;
 		$pointUser['PointUser']['payjp_brand'] = NULL;
 		$pointUser['PointUser']['payjp_last4'] = NULL;
-		$pointUser['PointUser']['pay_plan'] = NULL;
+		$pointUser['PointUser']['charge_point'] = NULL;
 		$pointUser['PointUser']['auto_charge_status'] = 'cancell';
 		if($this->save($pointUser)){
 			$this->Mylog->record($mypage_id, 'customer_cancell');
