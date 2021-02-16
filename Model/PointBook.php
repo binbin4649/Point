@@ -107,7 +107,7 @@ class PointBook extends AppModel {
 		return $books;
     }
     
-    // reason と reason_id からMypageを書き換えて、月別にuserのPointBookを返す。 receive run のみ
+    // reason と reason_id からMypageを書き換えて、月別にuserのPointBookを返す。
     public function monthlyReasonIdBook($ym, $mypage_ids, $plugin_name){
 	    //$this->ccCall = ClassRegistry::init('Nos.NosCall');
 	    $cc_call_name = $plugin_name.'Call';
@@ -116,8 +116,7 @@ class PointBook extends AppModel {
 	    $this->ccUser = ClassRegistry::init($plugin_name.'.'.$cc_user_name);
 	    $books = $this->monthlyUserBook($ym, $mypage_ids);
 	    foreach($books as $key=>$book){
-		    $reason = $book['PointBook']['reason'];
-		    if($reason == 'receive' || $reason == 'run' || $reason == 'call_out' || $reason == 'emergency'){
+		    if(!empty($book['PointBook']['reason_id']) && !empty($book['PointBook']['point'])){
 			    $call = $this->ccCall->findById($book['PointBook']['reason_id'], null, null, -1);
 			    if($call){
 				    $mypage_id = $call[$cc_call_name]['mypage_id'];
