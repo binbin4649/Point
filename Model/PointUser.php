@@ -285,7 +285,10 @@ class PointUser extends AppModel {
 				$new_credit = $PointUser['PointUser']['credit'] + $credit;
 			}
 			if($new_point < 0) return false; //ポイント、クレジットはマイナスにならない。
-			if($new_credit < 0) return false;
+			//if($new_credit < 0) return false;
+			if($new_credit < 0){
+				$new_credit = 0;
+			}
 		}
 		$return = [
 			'point' => $point,
