@@ -8,7 +8,6 @@
 		<?php if(empty($PointUser['PointUser']['payjp_card_token'])): ?>
 			<li>カード情報入力、登録ボタンを押してください。</li>
 			<li>登録と同時に初月の決済が行われます。</li>
-			<li>毎月決済時にメールでお知らせします。</li>
 		<?php else: ?>
 			<li>再登録する際は、一旦「解除」してから、再登録お願いします。</li>
 		<?php endif; ?>

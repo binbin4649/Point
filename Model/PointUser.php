@@ -59,7 +59,8 @@ class PointUser extends AppModel {
 				'mypage_id' => $mypage_id,
 				'point' => 0,
 				'credit' => 0,
-				'available_point' => 0
+				'available_point' => 0,
+				'exp_date' => null
 			]];
 			if($this->save($PointUser)){
 				$PointUser['PointUser']['id'] = $this->getLastInsertId();
@@ -812,7 +813,11 @@ class PointUser extends AppModel {
 				$pointUser['PointUser']['auto_charge_status'] = 'fail';
 				$this->create();
 				$this->save($pointUser);
-				$this->sendEmail($pointUser['Mypage']['email'], '決済失敗[エラー]のお知らせ', $pointUser, array('template'=>'Point.subscription_fail', 'layout'=>'default'));
+				if(filter_var($pointUser['Mypage']['email'], FILTER_VALIDATE_EMAIL)){
+					$this->sendEmail($pointUser['Mypage']['email'], '決済失敗[エラー]のお知らせ', $pointUser, array('template'=>'Point.subscription_fail', 'layout'=>'default'));
+				}
+				$message = '[エラー]カード決済に失敗しました。クレジットカードの再登録をお願いいたします。';
+				$this->Mylog->record($mypage_id, 'message_submit', null, null, $message);
 			}
 			return false;
 		}
@@ -848,7 +853,9 @@ class PointUser extends AppModel {
 		$PointBook['PointBook']['created'] = date("Y-m-d H:i:s") ;
 		$PointBook['PointBook']['id'] = $this->PointBook->getLastInsertId();
 		$pointUser['PointBook'] = $PointBook['PointBook'];
-		$this->sendEmail($pointUser['Mypage']['email'], 'カード決済のお知らせ', $pointUser, array('template'=>'Point.subscription', 'layout'=>'default'));
+		if(filter_var($pointUser['Mypage']['email'], FILTER_VALIDATE_EMAIL)){
+			$this->sendEmail($pointUser['Mypage']['email'], 'カード決済のお知らせ', $pointUser, array('template'=>'Point.subscription', 'layout'=>'default'));
+		}
 		$this->Mylog->record($pointUser['PointUser']['mypage_id'], 'Charge');
 		return true;
 	}
@@ -856,18 +863,20 @@ class PointUser extends AppModel {
 	// 課金解除
 	public function payjpCustomerCancell($mypage_id){
 		$pointUser = $this->findByMypageId($mypage_id, null, null, -1);
-		$secret_key = Configure::read('payjp.secret');
-		\Payjp\Payjp::setApiKey($secret_key);
-		try {
-			$cu = \Payjp\Customer::retrieve($mypage_id);
-			$cu->delete();
-			if (isset($cu['error'])) {
-		        throw new Exception();
-		    }
-		}catch (Exception $e){
-			$error_body = $e->getJsonBody();
-			$this->log('Pointuser.php payjpCustomerCancell : '.$error_body['error']['message']);
-			return false;
+		if(!Configure::read('MccPlugin.TEST_MODE')){
+			$secret_key = Configure::read('payjp.secret');
+			\Payjp\Payjp::setApiKey($secret_key);
+			try {
+				$cu = \Payjp\Customer::retrieve($mypage_id);
+				$cu->delete();
+				if (isset($cu['error'])) {
+			        throw new Exception();
+			    }
+			}catch (Exception $e){
+				$error_body = $e->getJsonBody();
+				$this->log('Pointuser.php payjpCustomerCancell : '.$error_body['error']['message']);
+				return false;
+			}
 		}
 		$pointUser['PointUser']['payjp_card_token'] = NULL;
 		$pointUser['PointUser']['payjp_brand'] = NULL;
@@ -879,6 +888,7 @@ class PointUser extends AppModel {
 			return true;
 		}else{
 			$this->log('Pointuser.php payjpCustomerCancell save erroe.');
+			$this->log('Pointuser.php payjpCustomerCancell save error.: '.print_r($pointUser, true));
 			return false;
 		}
 	}
