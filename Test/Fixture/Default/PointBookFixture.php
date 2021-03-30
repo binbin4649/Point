@@ -26,6 +26,19 @@ class PointBookFixture extends CakeTestFixture {
 				'modified' => '2018-08-01 18:26:01'
 			],
 			[
+				'id' => 2,
+				'mypage_id' => '18',
+				'point_user_id' => '18',
+				'point' => 374,
+				'credit' => 0,
+				'point_balance' => 0,
+				'credit_balance' => 0,
+				'reason' => 'original',
+				'reason_id' => '7',
+				'created' => '2018-08-01 18:26:01',
+				'modified' => '2018-08-01 18:26:01'
+			],
+			[
 				'id' => 40,
 				'mypage_id' => '40',
 				'point_user_id' => '40',
