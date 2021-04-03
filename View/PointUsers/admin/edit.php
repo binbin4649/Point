@@ -36,6 +36,14 @@
 			</td>
 		</tr>
 		<tr>
+			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.charge_point', 'charge_point') ?></th>
+			<td class="col-input">
+				<?php echo $this->BcForm->input('PointUser.charge_point', array('type'=>'text', 'size'=>'4')) ?>
+				支払プラン：month　の場合、charge_point は課金基準日。
+				<?php echo $this->BcForm->error('PointUser.charge_point') ?></td>
+			</td>
+		</tr>
+		<tr>
 			<th class="col-head" width="150"><?php echo $this->BcForm->label('PointUser.pay_plan', '支払プラン') ?></th>
 			<td class="col-input">
 				<?php echo $this->BcForm->input('PointUser.pay_plan', array('type'=>'select', 'options'=>$PayPlan, 'empty'=>'---')) ?>
@@ -68,7 +76,7 @@
 <ul>
 	<li>[2018-05-25] [basic -> pay_off] 既存のcall予約(before)をすべて削除する。</li>
 	<li>[basic <-> auto]へ任意に変えてどうなるかはテストしてないし、やるべきでもない。本来はカード登録が必要。</li>
-	<li>支払プラン：month　の場合、charge_point は課金基準日。</li>
+	<li>支払プラン：month　の場合、charge_point は課金基準日。オートチャージ中に利用期限変えた場合は、charge_pointに合わせて変える</li>
 	<li></li>
 </ul>
 </div>

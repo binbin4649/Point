@@ -34,11 +34,13 @@ class PointBookTest extends BaserTestCase {
     }
 	
 	public function testMonthlyReasonIdBook(){
-		$ym = '201808';
-		$mypage_ids[] = '18';
-		$plugin_name = 'Nos';
-		$r = $this->PointBook->monthlyReasonIdBook($ym, $mypage_ids, $plugin_name);
-		$this->assertEquals('374', $r[0]['PointBook']['point']);
+		if(in_array('plugin.point.Default/NosCall', $this->fixtures, true)){
+			$ym = '201808';
+			$mypage_ids[] = '18';
+			$plugin_name = 'Nos';
+			$r = $this->PointBook->monthlyReasonIdBook($ym, $mypage_ids, $plugin_name);
+			$this->assertEquals('374', $r[0]['PointBook']['point']);
+		}
 	}
 	
 	public function testMonthlyUserBook(){

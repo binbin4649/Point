@@ -119,6 +119,9 @@ class PointUser extends AppModel {
 		$PointUser['PointUser']['pay_plan'] = $data['PointUser']['pay_plan'];
 		$PointUser['PointUser']['invoice_plan'] = $data['PointUser']['invoice_plan'];
 		$PointUser['PointUser']['exp_date'] = $data['PointUser']['exp_date'];
+		if(!empty($data['PointUser']['charge_point'])){
+			$PointUser['PointUser']['charge_point'] = $data['PointUser']['charge_point'];
+		}
 		$this->create();
 		return $this->save($PointUser);
 	}

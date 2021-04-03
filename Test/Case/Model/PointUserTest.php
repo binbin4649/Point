@@ -160,10 +160,12 @@ class PointUserTest extends BaserTestCase {
 	    $this->assertFalse($this->PointUser->pointExp($data));
     }
     
+/*
     public function testPointExpクレジットはマイナスにならない(){
 	    $data = ['mypage_id'=>1, 'point'=>'-50', 'reason'=>'test'];
 	    $this->assertFalse($this->PointUser->pointExp($data));
     }
+*/
     
     public function testPointExpポイントはマイナスにならない(){
 	    $data = ['mypage_id'=>1, 'point'=>'-200', 'reason'=>'test'];
