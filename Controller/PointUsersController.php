@@ -62,6 +62,22 @@ class PointUsersController extends PointAppController {
 	  $this->request->data = $pointUser;
   }
   
+  public function admin_cancell_auto_charge($mypage_id){
+	  $this->autoRender = false;
+	  $PointUser = $this->PointUser->getPointUser($mypage_id);
+	  if(empty($PointUser['PointUser']['payjp_card_token'])){
+		  $this->setMessage('登録されていません。', true);
+		  $this->redirect(array('action' => 'index'));
+	  }else{
+		  if($this->PointUser->payjpCustomerCancell($mypage_id)){
+			  $this->setMessage('クレジットカードの登録を解除しました。');
+		  }else{
+			  $this->setMessage('エラー：解除に失敗しました。', true);
+		  }
+	  }
+	  $this->redirect(array('action' => 'edit/'.$PointUser['PointUser']['id']));
+  }
+  
   //ユーザー編集
   public function admin_edit($id = null){
 	  $this->pageTitle = 'PointUser 編集';

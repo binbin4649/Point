@@ -5,7 +5,10 @@
 		<tr>
 			<th class="col-head"><?php echo $this->BcForm->label('Mypage.id', '会員番号') ?></th>
 			<td class="col-input">
-				<?php echo $this->request->data['Mypage']['id']; ?>
+				<?php 
+					$mypage_id = $this->request->data['Mypage']['id'];
+					echo $mypage_id;
+				?>
 				<?php echo $this->BcForm->input('PointUser.mypage_id', array('type' => 'hidden')) ?>
 				<?php echo $this->BcForm->input('PointUser.id', array('type' => 'hidden')) ?>
 			</td>
@@ -33,6 +36,10 @@
 				customer_token:<?php echo $this->request->data['PointUser']['payjp_customer_token']; ?><br>
 				brand:<?php echo $this->request->data['PointUser']['payjp_brand']; ?><br>
 				last4:<?php echo $this->request->data['PointUser']['payjp_last4']; ?>
+				<p>
+				<?php echo $this->BcBaser->link('カード登録解除', '/admin/point/point_users/cancell_auto_charge/'.$mypage_id, [], 'カード登録解除します。よろしいですか？'); ?>
+				<br>予約は解除されない。
+				</p>
 			</td>
 		</tr>
 		<tr>
