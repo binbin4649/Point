@@ -15,6 +15,7 @@ if ($data['Mypage']['status'] == 0) {
 	<td><?php $this->BcBaser->link($data['Mypage']['name'], array('action' => 'edit', $data['PointUser']['id'])) ?></td>
 	<td><?php echo $data['PointUser']['point'] ?></td>
 	<td><?php echo $data['PointUser']['credit'] ?></td>
+	<td><?php echo $data['PointUser']['exp_date'] ?></td>
 	<td><?php echo $this->BcTime->format('Y-m-d', $data['Mypage']['created']) ?><br />
 		<?php echo $this->BcTime->format('Y-m-d', $data['Mypage']['modified']) ?></td>
 </tr>
