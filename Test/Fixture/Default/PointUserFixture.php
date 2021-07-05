@@ -91,6 +91,20 @@ class PointUserFixture extends CakeTestFixture {
 				'created' => '2018-07-30 16:26:01',
 				'modified' => '2018-07-30 16:26:01',
 			],
+			[
+				'id' => 7,
+				'mypage_id' => 19,
+				'point' => 0,
+				'credit' => 0,
+				'available_point' => 0,
+				'charge_point' => null,
+				'payjp_card_token' => null,
+				'pay_plan' => null,
+				'exp_date' => null,
+				'auto_charge_status' => null,
+				'created' => '2018-07-30 16:26:01',
+				'modified' => '2018-07-30 16:26:01',
+			],
 		];
 		parent::init();
 	}

@@ -57,6 +57,34 @@ class PointCouponFixture extends CakeTestFixture {
 			'generated' => 50,
 			'created' => '2018-08-01 18:26:01'
 		),
+		array(
+			'id' => 5,
+			'name' => 'イベント名5',
+			'division' => 'test5',
+			'start' => '2038-08-01',
+			'finish' => '2039-01-19',
+			'point' => 1,
+			'times' => 1,
+			'code' => 'test5',
+			'use_plan' => 'limited',
+			'use_time' => 0,
+			'generated' => 1,
+			'created' => '2018-08-01 18:26:01'
+		),
+		array(
+			'id' => 6,
+			'name' => 'イベント名6',
+			'division' => 'test6',
+			'start' => '2018-08-01',
+			'finish' => '2038-01-19',
+			'point' => 1,
+			'times' => 100,
+			'code' => 'test6',
+			'use_plan' => 'limited',
+			'use_time' => 100,
+			'generated' => 1,
+			'created' => '2018-08-01 18:26:01'
+		),
 		
 	);
 

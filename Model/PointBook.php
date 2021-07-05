@@ -14,6 +14,42 @@ class PointBook extends AppModel {
 			'foreignKey' => 'point_user_id']
 	];
 	
+	// coupon の point_book_id 返す
+	public function getPointCouponId($code, $mypage_id){
+		$PointBook = $this->find('first',array(
+			'conditions' => array(
+				'PointBook.mypage_id' => $mypage_id,
+				'PointBook.reason' => 'coupon',
+	        	'PointBook.reason_id' => $code
+        	),
+		)); 
+		if($PointBook){
+			return $PointBook['PointBook']['id'];
+		}else{
+			return false;
+		}
+	}
+	
+	// pointをcouponの利用回数としてbook新規登録
+	public function addPointCoupon($code, $mypage_id, $point){
+		$PointUser = $this->PointUser->getPointUser($mypage_id);
+		$this->create();
+		$PointBook['PointBook'] = [
+			'mypage_id' => $mypage_id,
+			'point_user_id' => $PointUser['PointUser']['id'],
+			'point' => $point,// 利用上限
+			'credit' => 0,// 予約数
+			'reason' => 'coupon',
+			'reason_id' => $code,
+		];
+		if(!$this->save($PointBook)){
+			$this->log('PointBook.php getPointCoupon. save error. : '.print_r($PointBook, true));
+		}
+		$PointBook['PointBook']['id'] = $this->getLastInsertId();
+		return $PointBook['PointBook']['id'];
+	}
+	
+	
 	// 2019-03-20 した2つ　使ってないじゃないかと思う、
 	//締め作業振り分け
 	// cron 23:52 とかに実行する

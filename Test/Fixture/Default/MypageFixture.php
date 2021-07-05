@@ -65,6 +65,16 @@ class MypageFixture extends CakeTestFixture {
 			'created' => '2018-07-30 14:06:01',
 			'modified' => '2018-07-30 14:06:01'
 		),
+		array(
+			'id' => 19,
+			'name' => 'テスト19',
+			'username' => 'test19@test.com',
+			'status' => '0',
+			'password' => 'fbcf5055496900b9b62caa77a0ddbd9e0e622dbe',
+			'email' => 'test19@test.com',
+			'created' => '2018-07-30 14:06:01',
+			'modified' => '2018-07-30 14:06:01'
+		),
 	);
 
 }

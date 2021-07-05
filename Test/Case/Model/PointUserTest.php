@@ -36,6 +36,16 @@ class PointUserTest extends BaserTestCase {
 	    parent::tearDown();
     }
 	
+	public function testPayjpCharge(){
+		$data = [
+			'payjp_token' => 'test',
+			'amount' => '',
+			'mypage_id' => '1',
+		];
+		$r = $this->PointUser->payjpCharge($data);
+		$this->assertFalse($r);
+	}
+	
 	public function testNextMonthExpdate(){
 		$exp_date = '2021-01-31';
 		$base_day = '31';

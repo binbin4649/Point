@@ -90,6 +90,19 @@ class PointBookFixture extends CakeTestFixture {
 				'created' => date('Y-m-d H:i:s'),
 				'modified' => date('Y-m-d H:i:s')
 			],
+			[
+				'id' => 44,
+				'mypage_id' => '19',
+				'point_user_id' => '7',
+				'point' => 1,
+				'credit' => 1,
+				'point_balance' => 0,
+				'credit_balance' => 0,
+				'reason' => 'coupon',
+				'reason_id' => 'test6',
+				'created' => date('Y-m-d H:i:s'),
+				'modified' => date('Y-m-d H:i:s')
+			],
 		];
 		parent::init();
 	}

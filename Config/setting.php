@@ -31,6 +31,18 @@ $config['PointPlugin.PayPlanList'] = [
 	'month'=>'month',//月額課金
 	'reward'=>'reward'//報酬計算、精算
 ];
+$config['PointPlugin.CouponUsePlan'] = [
+	'once'=>'once', //一回限り
+	'limited'=>'limited',//一人一回限りで人数(times)限定
+	'unlimited'=>'unlimited'//一人一回限りで無制限
+];
+$config['PointPlugin.CouponStatus'] = [
+	'before'=>'before', //開始前、期限外
+	'valid'=>'valid',//有効、期限内、回数内
+	'invalid'=>'invalid',//無効、使用済み
+	'overtime'=>'overtime',// times が limitedに達した、
+	'overdue'=>'overdue'//期限過ぎた
+];
 $config['PointPlugin.InvoicePlanList'] = ['end_month'=>'末締翌月末払'];
 
 // 決済金額の種類。リスト。 決済金額 => 発行されるポイント

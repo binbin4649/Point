@@ -33,6 +33,21 @@ class PointBookTest extends BaserTestCase {
 	    parent::tearDown();
     }
 	
+	public function testGetPointCouponId(){
+		$code = 'test6';
+		$mypage_id = '19';
+		$r = $this->PointBook->getPointCouponId($code, $mypage_id);
+		$this->assertEquals(44, $r);
+	}
+	
+	public function testAddPointCoupon(){
+		$code = 'test5';
+		$mypage_id = '1';
+		$point = '1';
+		$r = $this->PointBook->addPointCoupon($code, $mypage_id, $point);
+		$this->assertTrue(!empty($r));
+	}
+	
 	public function testMonthlyReasonIdBook(){
 		if(in_array('plugin.point.Default/NosCall', $this->fixtures, true)){
 			$ym = '201808';

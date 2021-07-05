@@ -132,7 +132,7 @@ class PointUser extends AppModel {
 	public function pointAdd($data = []){
 		if(empty($data['mypage_id'])) return false;
 		if(empty($data['point_user_id'])) $data['point_user_id'] = $this->getPointUserId($data['mypage_id']);
-		if(empty($data['point'])) return false;
+		if(empty($data['point']) && $data['point'] !== 0) return false;
 		if(empty($data['reason'])) return false;
 		if(empty($data['reason_id'])) $data['reason_id'] = '';
 		if(empty($data['pay_token'])) $data['pay_token'] = '';
@@ -366,7 +366,63 @@ class PointUser extends AppModel {
 	
 	// payjp
 	
-	//都度払い
+	//都度払い ポイント計算しない  必須 payjp_token, amount, mypage_id
+	public function payjpCharge($data){
+		if(!isset($data['payjp_token']) || empty($data['payjp_token'])) return false;
+		if(!isset($data['amount']) || empty($data['amount'])) return false;
+		if(!isset($data['mypage_id']) || empty($data['mypage_id'])) return false;
+		if(!isset($data['point_user_id']) && empty($data['point_user_id'])) $data['point_user_id'] = $this->getPointUserId($data['mypage_id']);
+		if(!isset($data['point']) && empty($data['point'])) $data['point'] = 0;
+		if(!isset($data['credit']) && empty($data['credit'])) $data['credit'] = 0;
+		if(!isset($data['point_balance']) && empty($data['point_balance'])) $data['point_balance'] = null;
+		if(!isset($data['credit_balance']) && empty($data['credit_balance'])) $data['credit_balance'] = null;
+		if(!isset($data['pay_plan']) && empty($data['pay_plan'])) $data['pay_plan'] = null;
+		if(!isset($data['reason']) && empty($data['reason'])) $data['reason'] = 'payjp';
+		if(!isset($data['reason_id']) && empty($data['reason_id'])) $data['reason_id'] = '';
+		$siteUrl = Configure::read('BcEnv.siteUrl');
+		$amountList = Configure::read('PointPlugin.AmountList');
+		$secret_key = Configure::read('payjp.secret');
+		\Payjp\Payjp::setApiKey($secret_key);
+		try {
+			$charge = \Payjp\Charge::create([
+			  'card' => $data['payjp_token'],
+			  'amount'=> $data['amount'],
+			  'currency' => 'jpy'
+			]);
+			if (isset($charge['error'])) {
+		        throw new Exception();
+		    }
+		}catch (Exception $e){
+			$error_body = $e->getJsonBody();
+			$this->log('Pointuser.php payjpCharge : '.$error_body['error']['message']);
+			return false;
+		}
+		if($data['amount'] != $charge->amount){
+			$this->log('Warning : PointUser.php payjpCharge. Different amounts. payjp_id:'.$charge->id);
+		}
+		$this->PointBook->create();
+		$PointBook['PointBook'] = [
+			'mypage_id' => $data['mypage_id'],
+			'point_user_id' => $data['point_user_id'],
+			'point' => $data['point'],
+			'credit' => $data['credit'],
+			'point_balance' => $data['point_balance'],
+			'credit_balance' => $data['credit_balance'],
+			'pay_token' => $charge->id,
+			'pay_plan' => $data['pay_plan'],
+			'charge' => $data['amount'],
+			'reason' => $data['reason'],
+			'reason_id' => $data['reason_id'],
+		];
+		if(!$this->PointBook->save($PointBook)){
+			$this->log('PointUser.php payjpCharge save error. '. print_r($PointBook, true));
+			return false;
+		}
+		$PointBook['PointBook']['id'] = $this->PointBook->getLastInsertId();
+		return $PointBook;
+	}
+	
+	//都度払い ポイント
 	public function payjpOnceCharge($payjp_token, $amount, $mypage_id){
 		$siteUrl = Configure::read('BcEnv.siteUrl');
 		$amountList = Configure::read('PointPlugin.AmountList');

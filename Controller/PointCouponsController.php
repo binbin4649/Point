@@ -41,8 +41,7 @@ class PointCouponsController extends PointAppController {
     );
     $PointCoupon = $this->paginate('PointCoupon');
     $this->set('PointCoupon', $PointCoupon);
-    $usePlan = ['once'=>'once', 'unlimited'=>'unlimited'];
-    $this->set('usePlan', $usePlan);
+    $this->set('usePlan', Configure::read('PointPlugin.CouponUsePlan'));
   }
   
   public function admin_csv_download($division = null){
@@ -91,6 +90,7 @@ class PointCouponsController extends PointAppController {
 			  $this->setMessage( 'エラー', true);
 		  }
 	  }
+	  $this->set('usePlan', Configure::read('PointPlugin.CouponUsePlan'));
   }
   
   //クーポンチャージ
