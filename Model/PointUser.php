@@ -140,8 +140,8 @@ class PointUser extends AppModel {
 		
 		//ポイント計算
 		$PointUser = $this->findById($data['point_user_id'], null, null, -1);
-		// pay_off はマイナス入る
-		if($PointUser['PointUser']['pay_plan'] == 'pay_off'){
+		// pay_off reward はマイナス入る
+		if($PointUser['PointUser']['pay_plan'] == 'pay_off' || $PointUser['PointUser']['pay_plan'] == 'reward'){
 			$new_point = $PointUser['PointUser']['point'] + $data['point'];
 			$new_available_point = $PointUser['PointUser']['available_point'];
 		}else{
