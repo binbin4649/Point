@@ -35,7 +35,7 @@ class PointCouponTest extends BaserTestCase {
 		    'point' => '1',
 		    'times' => '',
 		    'target' => '',
-		    'target_id' => '',
+		    'target_id' => null,
 		    'use_plan' => 'unlimited',
 		    'generated' => '',
 		];
@@ -53,7 +53,7 @@ class PointCouponTest extends BaserTestCase {
 		    'point' => '1',
 		    'times' => '100',
 		    'target' => '',
-		    'target_id' => '',
+		    'target_id' => null,
 		    'use_plan' => 'limited',
 		    'generated' => '',
 		];
@@ -71,7 +71,7 @@ class PointCouponTest extends BaserTestCase {
 		    'point' => '10',
 		    'times' => '',
 		    'target' => '',
-		    'target_id' => '',
+		    'target_id' => null,
 		    'use_plan' => 'once',
 		    'generated' => '10',
 		];
@@ -90,7 +90,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '',
 			    'times' => '',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => '',
 			    'generated' => '',
 		    ]
@@ -112,7 +112,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => '1',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'limited',
 			    'generated' => '1',
 		    ]
@@ -130,7 +130,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => '1',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'limited',
 			    'generated' => '1',
 		    ]
@@ -167,7 +167,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => '1',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'once',
 			    'generated' => '',
 		    ]
@@ -185,7 +185,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => '1',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'once',
 			    'generated' => 'a',
 		    ]
@@ -203,7 +203,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => '',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'limited',
 			    'generated' => '1',
 		    ]
@@ -221,7 +221,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => 'a',
 			    'target' => '',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'limited',
 			    'generated' => '1',
 		    ]
@@ -239,7 +239,7 @@ class PointCouponTest extends BaserTestCase {
 			    'point' => '1',
 			    'times' => '1',
 			    'target' => 'Members.Mypage',
-			    'target_id' => '',
+			    'target_id' => null,
 			    'use_plan' => 'limited',
 			    'generated' => '1',
 		    ]

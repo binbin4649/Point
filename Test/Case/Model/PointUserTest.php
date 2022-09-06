@@ -36,6 +36,15 @@ class PointUserTest extends BaserTestCase {
 	    parent::tearDown();
     }
 	
+	public function testPayPlanEdit(){
+		$data['PointUser']['mypage_id'] = 2;
+		$data['PointUser']['pay_plan'] = 'pay_off';
+		$data['PointUser']['invoice_plan'] = 'pm_month';
+		$data['PointUser']['exp_date'] = '';
+		$r = $this->PointUser->payPlanEdit($data);
+		$this->assertEquals('pay_off', $r['PointUser']['pay_plan']);
+	}
+	
 	public function testPayjpCharge(){
 		$data = [
 			'payjp_token' => 'test',
@@ -129,7 +138,7 @@ class PointUserTest extends BaserTestCase {
         $this->assertEquals('1', $this->PointUser->getPointUserId(1));
     }
     
-    public function testPointAddポイントマイナス(){
+    public function testPointAddPointMinus(){
 	    $data = ['mypage_id'=>4, 'point'=>'-200', 'reason'=>'test'];
 	    $r = $this->PointUser->pointAdd($data);
 	    $this->assertEquals('-1200', $r['PointBook']['point_balance']);
@@ -248,15 +257,5 @@ class PointUserTest extends BaserTestCase {
 	    $r = $this->PointUser->pointCheck(1, '500');
 	    $this->assertFalse($r);
     }
-    
-    public function testPayPlanEdit(){
-	    $data['PointUser']['mypage_id'] = 2;
-	    $data['PointUser']['pay_plan'] = 'pay_off';
-	    $data['PointUser']['invoice_plan'] = 'pm_month';
-	    $data['PointUser']['exp_date'] = '';
-	    $r = $this->PointUser->payPlanEdit($data);
-	    $this->assertEquals('pay_off', $r['PointUser']['pay_plan']);
-    }
-    
 
 }

@@ -16,6 +16,7 @@ class PointCouponFixture extends CakeTestFixture {
 			'use_plan' => 'unlimited',
 			'use_time' => 1,
 			'generated' => 1,
+			'target_id' => null,
 			'created' => '2018-08-01 18:26:01'
 		),
 		array(
@@ -29,6 +30,7 @@ class PointCouponFixture extends CakeTestFixture {
 			'use_plan' => 'once',
 			'use_time' => 0,
 			'generated' => 50,
+			'target_id' => null,
 			'created' => '2018-08-01 18:26:01'
 		),
 		array(
@@ -42,6 +44,7 @@ class PointCouponFixture extends CakeTestFixture {
 			'use_plan' => 'unlimited',
 			'use_time' => 0,
 			'generated' => 1,
+			'target_id' => null,
 			'created' => '2018-07-01 18:26:01'
 		),
 		array(
@@ -55,6 +58,7 @@ class PointCouponFixture extends CakeTestFixture {
 			'use_plan' => 'once',
 			'use_time' => 1,
 			'generated' => 50,
+			'target_id' => null,
 			'created' => '2018-08-01 18:26:01'
 		),
 		array(
@@ -69,6 +73,7 @@ class PointCouponFixture extends CakeTestFixture {
 			'use_plan' => 'limited',
 			'use_time' => 0,
 			'generated' => 1,
+			'target_id' => null,
 			'created' => '2018-08-01 18:26:01'
 		),
 		array(
@@ -83,6 +88,7 @@ class PointCouponFixture extends CakeTestFixture {
 			'use_plan' => 'limited',
 			'use_time' => 100,
 			'generated' => 1,
+			'target_id' => null,
 			'created' => '2018-08-01 18:26:01'
 		),
 		

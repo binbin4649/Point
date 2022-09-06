@@ -21,7 +21,7 @@ class PointCouponsSchema extends CakeSchema {
 		'point' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => false),
 		'times' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => false),
 		'target' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 100, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'target_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'target_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'code' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 100, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'use_plan' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'use_time' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
